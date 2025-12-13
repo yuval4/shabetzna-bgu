@@ -1,0 +1,9 @@
+.disabled {
+  opacity: 0.5;
+  user-select: none;
+  cursor: not-allowed;
+}
+
+.disableEvents {
+  pointer-events: none;
+}

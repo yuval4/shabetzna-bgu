@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 120px 30px;
+  text-align: center;
+}
+
+.loginForm {
+  width: 340px;
+}
+
+@media (min-width: 768px) {
+  .loginForm {
+    border: 1px solid #c9c9c9;
+    border-radius: 10px;
+    padding: 50px 20px;
+    box-shadow: 2px 3px 8px 2px #00000014;
+  }
+}
+
+.logo {
+  width: 170px;
+}
+
+.subtitle {
+  margin: 20px !important;
+}
+
+.button {
+  margin: 25px !important;
+}
+
+.googleIcon {
+  height: 15px;
+}
+
+.description {
+  margin: 20px !important;
+  font-size: 0.75rem !important;
+  color: gray;
+}
+
+.agreements {
+  margin: 30px !important;
+  font-size: 0.75rem !important;
+  display: flex;
+  justify-content: space-evenly;
+}

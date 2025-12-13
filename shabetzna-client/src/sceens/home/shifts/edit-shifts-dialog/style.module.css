@@ -1,0 +1,19 @@
+.loading {
+  filter: blur(2px);
+  transition: "filter .2s";
+  user-select: none;
+  pointer-events: none;
+}
+
+.shiftRow {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dialog .paper {
+  height: 650px;
+  width: 80vw;
+  min-width: 330px;
+  max-width: 750px;
+}

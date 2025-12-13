@@ -1,0 +1,89 @@
+.title {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  justify-content: center;
+  color: white;
+  background-color: var(--mui-primary-main);
+  justify-content: space-between;
+  padding: 6px 14px;
+  min-height: 50px;
+}
+
+.titleText {
+  font-size: clamp(0.5rem, 2vw + 0.2rem, 1.5rem) !important;
+}
+
+@media (min-width: 390px) {
+  .titleText {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (min-width: 500px) {
+  .titleText {
+    font-size: 1.25rem !important;
+  }
+}
+
+.actionIcons {
+  display: flex;
+  gap: 10px;
+}
+
+.tableContainer {
+  margin-top: 16px;
+  border-radius: 10px 10px 0 0;
+}
+
+.table:last-child {
+  background-color: rgb(from var(--mui-grey-A400) r g b / 0.1);
+  border-radius: 0 0 10px 10px;
+}
+
+@media (min-width: 900px) {
+  .tableContainer {
+    max-height: 700px;
+  }
+}
+
+.row:last-child td,
+.row:last-child th {
+  border: 0;
+}
+
+.lightRow {
+  background-color: rgb(from var(--mui-grey-A400) r g b / 0.05);
+}
+
+.darkRow {
+  background-color: rgb(from var(--mui-grey-A400) r g b / 0.3);
+}
+
+.historyRow {
+  opacity: 0.5;
+}
+
+/* TODO: use color from theme */
+.highlightedRow {
+  background-color: rgba(226, 255, 4, 0.215);
+}
+
+.arrow {
+  margin-right: 8px;
+}
+
+.hideArrow {
+  visibility: hidden;
+}
+
+.column:hover .arrow {
+  opacity: 0.5;
+  visibility: visible;
+}
+
+.onDataContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}

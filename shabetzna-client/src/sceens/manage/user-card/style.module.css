@@ -1,0 +1,34 @@
+.userCard {
+  border-radius: 6px;
+  box-shadow: 0px 1px 5px 0 rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+}
+
+.userInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.image {
+  border-radius: 50%;
+  width: 3rem !important;
+  height: 3rem !important;
+}
+
+.meTag {
+  background-color: var(--mui-secondary-main);
+  color: white;
+  padding: 0 8px;
+  margin-right: 8px !important;
+  border-radius: 6px;
+  user-select: none;
+}

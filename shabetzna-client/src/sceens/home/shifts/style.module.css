@@ -1,0 +1,17 @@
+.container {
+  padding: 32px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
+}
+
+.actions {
+  text-align: left;
+}
+
+.actionIcon:not(:last-child) {
+  margin-left: 12px;
+}

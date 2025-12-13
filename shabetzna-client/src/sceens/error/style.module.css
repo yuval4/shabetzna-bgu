@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.image {
+  max-height: 50vh;
+  margin-bottom: 32px;
+}
+
+.button {
+  margin-top: 28px !important;
+}
+
+.chatLink {
+  margin-top: 14px !important;
+  gap: 12px;
+}

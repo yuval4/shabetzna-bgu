@@ -1,0 +1,15 @@
+.loading {
+  filter: blur(2px);
+  transition: "filter .2s";
+  user-select: none;
+  pointer-events: none;
+}
+
+.dialogContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.usersPerShift {
+  width: 60px;
+}

@@ -1,0 +1,10 @@
+.container {
+  height: -webkit-fill-available;
+}
+
+.constraints {
+}
+
+.shifts {
+  background-color: var(--mui-grey-A200);
+}

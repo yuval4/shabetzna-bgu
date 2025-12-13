@@ -1,0 +1,19 @@
+.container {
+  padding: 10px 12px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--mui-primary-main);
+}
+
+.title:not(:first-child) {
+  margin-top: 32px;
+}
+
+.icons {
+  display: flex;
+  gap: 4px;
+}
