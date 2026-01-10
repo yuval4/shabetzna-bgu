@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Role } from '../auth/consts/role.enum';
-import { Public } from '../auth/guards/jwt.guard';
+import { Development } from '../auth/guards/jwt.guard';
 import { Roles } from '../auth/roles/roles.decorator';
 import { User } from '../users/entities/user.entity';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -23,8 +23,7 @@ import { TeamsService } from './teams.service';
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
-  // TODO - public only if not using google auth
-  @Public()
+  @Development()
   @Get()
   findAll() {
     return this.teamsService.findAll();
@@ -35,8 +34,7 @@ export class TeamsController {
     return this.teamsService.findOne(id);
   }
 
-  // TODO - public only if not using google auth
-  @Public()
+  @Development()
   @Get(':id/users')
   users(@Param('id') id: string) {
     return this.teamsService.findUsers(id);

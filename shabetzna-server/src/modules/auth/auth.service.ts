@@ -19,7 +19,11 @@ export class AuthService {
       const payload = { id: user.id };
       const token = await this.jwtService.sign(payload);
 
-      console.log('function: signIn ---> ', 'Generated token:', token);
+      console.log(
+        'function: signIn ---> ',
+        'Generated token for user:',
+        userId,
+      );
 
       return token;
     } catch (error) {

@@ -11,14 +11,13 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { GoogleAuthGuard } from './guards/google.guard';
-import { Public } from './guards/jwt.guard';
+import { Development, Public } from './guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // TODO - public only if not using google auth
-  @Public()
+  @Development()
   @Post('login')
   async login(
     @Res({ passthrough: true }) res: Response,
@@ -64,8 +63,7 @@ export class AuthController {
     const token = await this.authService.signIn(req.user.id);
     console.log(
       'function: googleCallback ---> ',
-      'Redirecting to client with token:',
-      token,
+      'Redirecting to client with token',
     );
 
     res.redirect(`${process.env.CLIENT_URL}/login?token=${token}`);
