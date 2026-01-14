@@ -5,7 +5,7 @@ import { Team } from '../teams/entities/team.entity';
 import { CreateConstraintDto } from './dto/create-constraint.dto';
 import { UpdateConstraintDto } from './dto/update-constraint.dto';
 import { Constraint } from './entities/constraint.entity';
-import { UserMetadata } from 'src/types';
+import { UserMetadata } from '../../types'
 
 @Injectable()
 export class ConstraintService {

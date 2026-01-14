@@ -7,7 +7,7 @@ import { IsNull, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { UserToTeam } from './entities/user-team.entity';
 import { CreateUserToTeamDto } from './dto/create-user-to-team.dto';
-import { UserMetadata } from 'src/types';
+import { UserMetadata } from '../../types';
 import { Role } from '../auth/consts/role.enum';
 
 @Injectable()

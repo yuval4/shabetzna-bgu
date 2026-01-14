@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
-import { UserMetadata } from 'src/types';
+import { UserMetadata } from '../../types';
 import { Between, In, IsNull, Repository } from 'typeorm';
 import { dateWithoutTime } from '../../utils/dates/date-without-time';
 import { getDatesBetween } from '../../utils/dates/get-dates-between';

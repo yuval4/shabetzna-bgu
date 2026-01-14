@@ -1,6 +1,6 @@
-import { Constraint } from 'src/modules/constraint/entities/constraint.entity';
-import { Shift } from 'src/modules/shifts/entities/shift.entity';
-import { UserToTeam } from 'src/modules/teams/entities/user-team.entity';
+import { Constraint } from '../../constraint/entities/constraint.entity'
+import { Shift } from  '../../shifts/entities/shift.entity' 
+import { UserToTeam } from '../../teams/entities/user-team.entity'
 import {
   Column,
   CreateDateColumn,

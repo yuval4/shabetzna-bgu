@@ -9,7 +9,7 @@ import {
   Column,
 } from 'typeorm';
 import { Team } from './team.entity';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('user_to_team', { synchronize: true })
 export class UserToTeam {

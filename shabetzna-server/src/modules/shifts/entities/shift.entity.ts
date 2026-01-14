@@ -1,5 +1,5 @@
-import { Team } from 'src/modules/teams/entities/team.entity';
-import { User } from 'src/modules/users/entities/user.entity';
+import { Team } from '../../teams/entities/team.entity';
+import { User } from '../../users/entities/user.entity';
 import {
   BeforeInsert,
   Column,

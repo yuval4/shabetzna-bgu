@@ -10,7 +10,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Roles } from 'src/modules/auth/roles/roles.decorator';
+import { Roles } from '../auth/roles/roles.decorator'
 import { Role } from '../auth/consts/role.enum';
 import { Team } from '../teams/entities/team.entity';
 import { AllocateShiftsDto } from './dto/allocate-shifts.dto';

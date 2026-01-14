@@ -10,7 +10,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Roles } from 'src/modules/auth/roles/roles.decorator';
+import { Roles } from '../auth/roles/roles.decorator'
 import { Team } from '../teams/entities/team.entity';
 import { ConstraintService } from './constraint.service';
 import { CreateConstraintDto } from './dto/create-constraint.dto';

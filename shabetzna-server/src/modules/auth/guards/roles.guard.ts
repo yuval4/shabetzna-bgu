@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../roles/roles.decorator';
 import { Role } from '../consts/role.enum';
-import { TeamsService } from 'src/modules/teams/teams.service';
+import { TeamsService } from '../../teams/teams.service';
 import { Request } from 'express';
 
 @Injectable()
