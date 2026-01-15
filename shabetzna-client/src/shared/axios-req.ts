@@ -10,8 +10,8 @@ const instance = axios.create({
     import.meta.env.VITE_ENV === ENV.DEVELOPMENT
       ? "https://" +
         import.meta.env.VITE_VERCEL_BRANCH_URL.replace(
-          "shabetzna-git",
-          "shabetzna-server-git"
+          "shabetzna-bgu-git",
+          "shabetzna-bgu-server-git"
         ) +
         "/api"
       : import.meta.env.VITE_SERVER_URL,
