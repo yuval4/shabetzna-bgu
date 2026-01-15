@@ -9,7 +9,7 @@ import {
   Req
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Role } from '../auth/consts/role.enum';
+import { TeamRole } from '../auth/consts/team-role.enum';
 import { TeamRoles } from '../auth/roles/team-roles.decorator';
 import { Team } from '../teams/entities/team.entity';
 import { ConstraintService } from './constraint.service';
@@ -52,13 +52,13 @@ export class ConstraintController {
     return this.constraintService.update(req.user, id, updateConstraintDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Put(':id/approve')
   approve(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'APPROVED' });
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Put(':id/reject')
   reject(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'REJECTED' });

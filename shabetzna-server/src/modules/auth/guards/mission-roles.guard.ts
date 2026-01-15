@@ -1,19 +1,22 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { MissionsService } from 'src/modules/missions/missions.service';
-import { Role } from '../consts/role.enum';
+import { MissionsService } from '../../../modules/missions/missions.service';
+import { MissionRole } from '../consts/mission-role.enum';
+import { TeamRole } from '../consts/team-role.enum';
 import { MISSION_ROLES_KEY } from '../roles/mission-roles.decorator';
+import { TeamsService } from '../../../modules/teams/teams.service';
 
 @Injectable()
 export class MissionRolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private missionsService: MissionsService,
+    private teamsService: TeamsService,
   ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const missionRoles = this.reflector.get<Role[]>(MISSION_ROLES_KEY, context.getHandler());
+    const missionRoles = this.reflector.get<MissionRole[]>(MISSION_ROLES_KEY, context.getHandler());
 
     if (!missionRoles || missionRoles.length === 0) {
       return true;
@@ -30,6 +33,16 @@ export class MissionRolesGuard implements CanActivate {
     );
 
     // Check if any of the user's roles match the required roles for the route
-    return missionRoles.includes(userToMission?.role as Role);
+    if (missionRoles.includes(userToMission?.role as MissionRole)) {
+      return true;
+    }
+
+    // If user has TEAM_LEADER role in the team of the mission, allow access
+    const userToTeam = await this.teamsService.findUserTeamRole(
+      user.id,
+      userToMission.mission.teamId,
+    );
+
+    return TeamRole.TEAM_LEADER === userToTeam?.role as TeamRole;
   }
 }

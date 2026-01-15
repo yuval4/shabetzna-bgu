@@ -10,7 +10,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Role } from '../auth/consts/role.enum';
+import { TeamRole } from '../auth/consts/team-role.enum';
 import { TeamRoles } from '../auth/roles/team-roles.decorator';
 import { Mission } from '../missions/entities/mission.entity';
 import { Unit } from '../units/entities/unit.entity';
@@ -43,7 +43,7 @@ export class ShiftsController {
     return this.shiftsService.missionShifts(missionId, start, end);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Patch(':id')
   updateById(
     @Req() req: Request,
@@ -53,7 +53,7 @@ export class ShiftsController {
     return this.shiftsService.update(req.user, id, updateShiftDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Post()
   create(
     @Req() req: Request,
@@ -62,7 +62,7 @@ export class ShiftsController {
     return this.shiftsService.create(req.user, createShiftDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Post('allocate/mission/:teamId')
   async allocate(
     @Req() req: Request,
@@ -82,7 +82,7 @@ export class ShiftsController {
     );
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Put()
   async updateShifts(
     @Req() req: Request,
@@ -95,7 +95,7 @@ export class ShiftsController {
     );
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: string): Promise<void> {
     return this.shiftsService.remove(req.user, id);

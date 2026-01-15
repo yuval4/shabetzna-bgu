@@ -2,15 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { UserMetadata } from '../../types';
-import { Role } from '../auth/consts/role.enum';
+import { TeamRole } from '../auth/consts/team-role.enum';
+import { Team } from '../teams/entities/team.entity';
+import { UserToTeam } from '../teams/entities/user-team.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateMissionDto } from './dto/create-mission.dto';
 import { CreateUserToMissionDto } from './dto/create-user-to-mission.dto';
 import { UpdateMissionDto } from './dto/update-mission.dto';
 import { Mission } from './entities/mission.entity';
 import { UserToMission } from './entities/user-mission.entity';
-import { Team } from '../teams/entities/team.entity';
-import { UserToTeam } from '../teams/entities/user-team.entity';
 
 @Injectable()
 export class MissionsService {
@@ -30,6 +30,7 @@ export class MissionsService {
   ): Promise<UserToMission | null> {
     return this.userToMissionRepository.findOne({
       where: { userId, missionId },
+      relations: { mission: true }
     });
   }
 
@@ -69,7 +70,7 @@ export class MissionsService {
         createdBy: user,
         updatedBy: user,
         user: user,
-        role: Role.TEAM_LEADER,
+        role: TeamRole.TEAM_LEADER,
         missionId: newMission.id,
       });
 

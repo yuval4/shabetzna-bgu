@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Role } from '../auth/consts/role.enum';
+import { TeamRole } from '../auth/consts/team-role.enum';
 import { Public } from '../auth/guards/jwt.guard';
 import { TeamRoles } from '../auth/roles/team-roles.decorator';
 import { User } from '../users/entities/user.entity';
@@ -18,6 +18,8 @@ import { CreateUserToMissionDto } from './dto/create-user-to-mission.dto';
 import { UpdateMissionDto } from './dto/update-mission.dto';
 import { Mission } from './entities/mission.entity';
 import { MissionsService } from './missions.service';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
+import { MissionRole } from '../auth/consts/mission-role.enum';
 
 @Controller('missions')
 export class MissionsController {
@@ -42,13 +44,13 @@ export class MissionsController {
     return this.missionsService.findUsers(id);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.TEAM_LEADER)
   @Post()
   create(@Req() req: Request, @Body() createMissionDto: CreateMissionDto) {
     return this.missionsService.create(req.user, createMissionDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Patch(':id')
   update(
     @Req() req: Request,
@@ -58,7 +60,7 @@ export class MissionsController {
     return this.missionsService.update(req.user, id, updateMissionDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Post('users')
   addUser(
     @Req() req: Request,
@@ -67,13 +69,13 @@ export class MissionsController {
     this.missionsService.addUser(req.user, createUserToMissionDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Post('team')
   addTeam(@Req() req: Request, @Body('missionId') missionId: Mission['id']) {
     return this.missionsService.addTeam(req.user, missionId);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Delete(':missionId/users/:userId')
   removeUser(
     @Req() req: Request,
@@ -83,7 +85,7 @@ export class MissionsController {
     return this.missionsService.removeUser(req.user, missionId, userId);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.TEAM_LEADER)
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: Mission['id']) {
     return this.missionsService.remove(req.user, id);

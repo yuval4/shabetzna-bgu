@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTeamDto } from './dto/create-team.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Team } from './entities/team.entity';
 import { IsNull, Repository } from 'typeorm';
-import { User } from '../users/entities/user.entity';
-import { UserToTeam } from './entities/user-team.entity';
-import { CreateUserToTeamDto } from './dto/create-user-to-team.dto';
 import { UserMetadata } from '../../types';
-import { Role } from '../auth/consts/role.enum';
+import { TeamRole } from '../auth/consts/team-role.enum';
+import { User } from '../users/entities/user.entity';
+import { CreateTeamDto } from './dto/create-team.dto';
+import { CreateUserToTeamDto } from './dto/create-user-to-team.dto';
+import { UpdateTeamDto } from './dto/update-team.dto';
+import { Team } from './entities/team.entity';
+import { UserToTeam } from './entities/user-team.entity';
 
 @Injectable()
 export class TeamsService {
@@ -16,7 +16,7 @@ export class TeamsService {
     @InjectRepository(Team) private teamRepository: Repository<Team>,
     @InjectRepository(UserToTeam)
     private userToTeamRepository: Repository<UserToTeam>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Team[]> {
     return await this.teamRepository.find();
@@ -110,7 +110,7 @@ export class TeamsService {
         createdBy: user,
         updatedBy: user,
         user: user,
-        role: Role.TEAM_LEADER,
+        role: TeamRole.TEAM_LEADER,
         teamId: newTeam.id,
       });
 

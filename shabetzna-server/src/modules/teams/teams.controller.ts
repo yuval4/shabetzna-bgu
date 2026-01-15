@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Role } from '../auth/consts/role.enum';
+import { TeamRole } from '../auth/consts/team-role.enum';
 import { Public } from '../auth/guards/jwt.guard';
 import { TeamRoles } from '../auth/roles/team-roles.decorator';
 import { User } from '../users/entities/user.entity';
@@ -47,13 +47,13 @@ export class TeamsController {
     return this.teamsService.findUsersWithJustice(id);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Post()
   create(@Req() req: Request, @Body() createTeamDto: CreateTeamDto) {
     return this.teamsService.create(req.user, createTeamDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Patch(':id')
   update(
     @Req() req: Request,
@@ -63,7 +63,7 @@ export class TeamsController {
     return this.teamsService.update(req.user, id, updateTeamDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Post('users')
   addUser(
     @Req() req: Request,
@@ -72,7 +72,7 @@ export class TeamsController {
     this.teamsService.addUser(req.user, createUserToTeamDto);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Delete(':teamId/users/:userId')
   removeUser(
     @Req() req: Request,
@@ -82,7 +82,7 @@ export class TeamsController {
     return this.teamsService.removeUser(req.user, teamId, userId);
   }
 
-  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: Team['id']) {
     return this.teamsService.remove(req.user, id);
