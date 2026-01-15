@@ -1,6 +1,4 @@
-import { Constraint } from '../../constraint/entities/constraint.entity'
-import { Shift } from  '../../shifts/entities/shift.entity' 
-import { UserToTeam } from '../../teams/entities/user-team.entity'
+import { UserToMission } from 'src/modules/missions/entities/user-mission.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,10 +8,13 @@ import {
   JoinTable,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  OneToOne,
 } from 'typeorm';
+import { Constraint } from '../../constraint/entities/constraint.entity';
+import { Shift } from '../../shifts/entities/shift.entity';
+import { UserToTeam } from '../../teams/entities/user-team.entity';
 import { Points } from './points.entity';
 
 @Entity({ name: 'users', synchronize: true })
@@ -59,6 +60,9 @@ export class User {
 
   @OneToMany(() => UserToTeam, (userToTeam) => userToTeam.user)
   teams: UserToTeam[];
+
+  @OneToMany(() => UserToMission, (userToMission) => userToMission.user)
+  missions: UserToMission[];
 
   @OneToMany(() => Shift, (shift) => shift.assignedUser)
   @JoinTable({

@@ -1,3 +1,4 @@
+import { Mission } from 'src/modules/missions/entities/mission.entity';
 import { Team } from '../../teams/entities/team.entity';
 import { User } from '../../users/entities/user.entity';
 import {
@@ -24,7 +25,7 @@ export class Shift {
   id: string;
 
   @Column({ type: 'uuid' })
-  teamId: string;
+  missionId: string;
 
   @Column({ type: 'date' })
   date: Date;
@@ -93,8 +94,8 @@ export class Shift {
   ])
   updatedBy: User;
 
-  @ManyToOne(() => Team, (team) => team.id)
-  team: Team;
+  @ManyToOne(() => Mission, (mission) => mission.id)
+  mission: Mission;
 
   @BeforeInsert()
   setShiftFlags() {

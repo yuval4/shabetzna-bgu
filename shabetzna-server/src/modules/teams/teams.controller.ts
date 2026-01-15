@@ -11,7 +11,7 @@ import {
 import { Request } from 'express';
 import { Role } from '../auth/consts/role.enum';
 import { Public } from '../auth/guards/jwt.guard';
-import { Roles } from '../auth/roles/roles.decorator';
+import { TeamRoles } from '../auth/roles/team-roles.decorator';
 import { User } from '../users/entities/user.entity';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { CreateUserToTeamDto } from './dto/create-user-to-team.dto';
@@ -21,7 +21,7 @@ import { TeamsService } from './teams.service';
 
 @Controller('teams')
 export class TeamsController {
-  constructor(private readonly teamsService: TeamsService) {}
+  constructor(private readonly teamsService: TeamsService) { }
 
   // TODO - public only if not using google auth
   @Public()
@@ -47,13 +47,13 @@ export class TeamsController {
     return this.teamsService.findUsersWithJustice(id);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
   @Post()
   create(@Req() req: Request, @Body() createTeamDto: CreateTeamDto) {
     return this.teamsService.create(req.user, createTeamDto);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
   @Patch(':id')
   update(
     @Req() req: Request,
@@ -63,7 +63,7 @@ export class TeamsController {
     return this.teamsService.update(req.user, id, updateTeamDto);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
   @Post('users')
   addUser(
     @Req() req: Request,
@@ -72,7 +72,7 @@ export class TeamsController {
     this.teamsService.addUser(req.user, createUserToTeamDto);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
   @Delete(':teamId/users/:userId')
   removeUser(
     @Req() req: Request,
@@ -82,7 +82,7 @@ export class TeamsController {
     return this.teamsService.removeUser(req.user, teamId, userId);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: Team['id']) {
     return this.teamsService.remove(req.user, id);

@@ -1,21 +1,21 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLES_KEY } from '../roles/roles.decorator';
-import { Role } from '../consts/role.enum';
-import { TeamsService } from '../../teams/teams.service';
 import { Request } from 'express';
+import { TeamsService } from '../../teams/teams.service';
+import { Role } from '../consts/role.enum';
+import { TEAM_ROLES_KEY } from '../roles/team-roles.decorator';
 
 @Injectable()
-export class RolesGuard implements CanActivate {
+export class TeamRolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private teamsService: TeamsService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const roles = this.reflector.get<Role[]>(ROLES_KEY, context.getHandler());
+    const teamRoles = this.reflector.get<Role[]>(TEAM_ROLES_KEY, context.getHandler());
 
-    if (!roles) {
+    if (!teamRoles || teamRoles.length === 0) {
       return true;
     }
 
@@ -30,6 +30,6 @@ export class RolesGuard implements CanActivate {
     );
 
     // Check if any of the user's roles match the required roles for the route
-    return roles.includes(userToTeam?.role as Role);
+    return teamRoles.includes(userToTeam?.role as Role);
   }
 }

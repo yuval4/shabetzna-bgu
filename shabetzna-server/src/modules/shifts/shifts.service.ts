@@ -13,6 +13,7 @@ import { CreateShiftDto } from './dto/create-shift.dto';
 import { UpdateShiftDto } from './dto/update-shift.dto';
 import { Shift } from './entities/shift.entity';
 import { AllocateShiftType } from './types/types';
+import { Mission } from '../missions/entities/mission.entity';
 
 @Injectable()
 export class ShiftsService {
@@ -29,13 +30,15 @@ export class ShiftsService {
     return await this.shiftRepository.find({
       where: {
         date: Between(start, end),
-        team: {
-          unitId,
+        mission: {
+          team: {
+            unitId,
+          },
         },
       },
       relations: {
         assignedUser: true,
-        team: true,
+        mission: true,
       },
       order: {
         date: 'ASC',
@@ -43,14 +46,14 @@ export class ShiftsService {
     });
   }
 
-  async teamShifts(
-    teamId: Team['id'],
+  async missionShifts(
+    missionId: Mission['id'],
     start: Date,
     end: Date,
   ): Promise<Shift[]> {
     return await this.shiftRepository.find({
       where: {
-        teamId,
+        missionId,
         date: Between(start, end),
       },
       relations: {
@@ -62,10 +65,10 @@ export class ShiftsService {
     });
   }
 
-  async teamShiftsForAlgorithm(teamId: Team['id']): Promise<Shift[]> {
+  async teamShiftsForAlgorithm(missionId: Mission['id']): Promise<Shift[]> {
     return await this.shiftRepository.find({
       where: {
-        teamId,
+        missionId,
       },
       select: ['id', 'date', 'assignedUserId', 'shiftType', 'isReadiness'],
       order: {
@@ -150,7 +153,7 @@ export class ShiftsService {
         relations: ['assignedUser', 'createdBy', 'updatedBy'],
         select: [
           'id',
-          'teamId',
+          'missionId',
           'date',
           'comment',
           'shiftType',

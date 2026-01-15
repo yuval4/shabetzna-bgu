@@ -5,22 +5,21 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   Put,
-  Req,
+  Req
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Roles } from '../auth/roles/roles.decorator'
+import { Role } from '../auth/consts/role.enum';
+import { TeamRoles } from '../auth/roles/team-roles.decorator';
 import { Team } from '../teams/entities/team.entity';
 import { ConstraintService } from './constraint.service';
 import { CreateConstraintDto } from './dto/create-constraint.dto';
 import { UpdateConstraintDto } from './dto/update-constraint.dto';
 import { Constraint } from './entities/constraint.entity';
-import { Role } from '../auth/consts/role.enum';
 
 @Controller('constraints')
 export class ConstraintController {
-  constructor(private readonly constraintService: ConstraintService) {}
+  constructor(private readonly constraintService: ConstraintService) { }
 
   @Get(':id')
   findOne(@Param('id') id: Constraint['id']) {
@@ -53,13 +52,13 @@ export class ConstraintController {
     return this.constraintService.update(req.user, id, updateConstraintDto);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
   @Put(':id/approve')
   approve(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'APPROVED' });
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @TeamRoles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
   @Put(':id/reject')
   reject(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'REJECTED' });
