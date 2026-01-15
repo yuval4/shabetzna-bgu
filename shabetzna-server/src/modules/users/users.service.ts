@@ -23,6 +23,9 @@ export class UsersService {
         teams: {
           team: true,
         },
+        missions: {
+          mission: true,
+        },
       },
       select: {
         id: true,

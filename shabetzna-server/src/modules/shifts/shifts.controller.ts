@@ -20,6 +20,8 @@ import { UpdateShiftsManuallyDto } from './dto/update-shift-manually';
 import { UpdateShiftDto } from './dto/update-shift.dto';
 import { Shift } from './entities/shift.entity';
 import { ShiftsService } from './shifts.service';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
+import { MissionRole } from '../auth/consts/mission-role.enum';
 
 @Controller('shifts')
 export class ShiftsController {
@@ -43,7 +45,7 @@ export class ShiftsController {
     return this.shiftsService.missionShifts(missionId, start, end);
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Patch(':id')
   updateById(
     @Req() req: Request,
@@ -53,7 +55,7 @@ export class ShiftsController {
     return this.shiftsService.update(req.user, id, updateShiftDto);
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Post()
   create(
     @Req() req: Request,
@@ -62,7 +64,7 @@ export class ShiftsController {
     return this.shiftsService.create(req.user, createShiftDto);
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Post('allocate/mission/:teamId')
   async allocate(
     @Req() req: Request,
@@ -82,7 +84,7 @@ export class ShiftsController {
     );
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Put()
   async updateShifts(
     @Req() req: Request,
@@ -95,7 +97,7 @@ export class ShiftsController {
     );
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: string): Promise<void> {
     return this.shiftsService.remove(req.user, id);

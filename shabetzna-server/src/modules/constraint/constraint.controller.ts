@@ -16,6 +16,9 @@ import { ConstraintService } from './constraint.service';
 import { CreateConstraintDto } from './dto/create-constraint.dto';
 import { UpdateConstraintDto } from './dto/update-constraint.dto';
 import { Constraint } from './entities/constraint.entity';
+import { Mission } from '../missions/entities/mission.entity';
+import { MissionRole } from '../auth/consts/mission-role.enum';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
 
 @Controller('constraints')
 export class ConstraintController {
@@ -52,13 +55,14 @@ export class ConstraintController {
     return this.constraintService.update(req.user, id, updateConstraintDto);
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  // TODO - change
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Put(':id/approve')
   approve(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'APPROVED' });
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Put(':id/reject')
   reject(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'REJECTED' });

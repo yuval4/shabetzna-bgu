@@ -30,7 +30,8 @@ export class UsersController {
     return this.usersService.findOne(req.user.id);
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  // TODO - change
+  @TeamRoles(TeamRole.TEAM_LEADER)
   @Post()
   create(
     @Req() req: Request,
@@ -39,7 +40,8 @@ export class UsersController {
     return this.usersService.create(req.user, createUserDto);
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  // TODO - change
+  @TeamRoles(TeamRole.TEAM_LEADER)
   @Put('/:id')
   update(
     @Req() req: Request,
@@ -49,7 +51,8 @@ export class UsersController {
     return this.usersService.update(req.user, id, updateUserDto);
   }
 
-  @TeamRoles(TeamRole.SHIFTS_ADMIN, TeamRole.TEAM_LEADER)
+  // TODO - change
+  @TeamRoles(TeamRole.TEAM_LEADER)
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: string): Promise<void> {
     return this.usersService.remove(req.user, id);
