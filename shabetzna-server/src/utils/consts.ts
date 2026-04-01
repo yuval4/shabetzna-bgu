@@ -4,3 +4,5 @@ export const ENV = {
   DEVELOPMENT: 'development',
   LOCAL: 'local',
 };
+
+export const DEV_ENVIRONMENTS = [ENV.DEVELOPMENT, ENV.LOCAL];
