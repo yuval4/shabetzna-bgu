@@ -1,11 +1,14 @@
 import { ShiftType } from "../../enums/shift-type";
+import { Mission } from "./mission";
 import { Team } from "./team";
 import { User } from "./user";
 
 export interface Shift {
   id: string;
-  team: Team;
-  teamId: Team["id"];
+  missionId: string;
+  mission?: Mission;
+  team?: Team;
+  teamId?: Team["id"];
   date: Date;
   shiftType: ShiftType;
   assignedUser: User;

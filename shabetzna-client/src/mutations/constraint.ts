@@ -1,8 +1,8 @@
 import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
+import { queryClient } from "../app";
 import axiosRes from "../shared/axios-req";
 import { Constraint } from "../shared/types/entities/constraint";
 import { User } from "../shared/types/entities/user";
-import { queryClient } from "../app";
 
 type PartialReasonConstraint = Pick<
   Constraint,
@@ -12,6 +12,7 @@ type PartialReasonConstraint = Pick<
 
 interface CreateConstraintMutation extends PartialReasonConstraint {
   userId: User["id"];
+  missionId: string;
 }
 
 export const useCreateConstraint = () =>

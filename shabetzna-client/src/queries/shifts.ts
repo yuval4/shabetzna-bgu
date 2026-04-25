@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosRes from "../shared/axios-req";
-import { Team } from "../shared/types/entities/team";
-import { Shift } from "../shared/types/entities/shift";
 import { formatDateToUrl } from "../shared/dates/format-date";
+import { Mission } from "../shared/types/entities/mission";
+import { Shift } from "../shared/types/entities/shift";
 import { Unit } from "../shared/types/entities/unit";
 
 export const getSpartaView = (unitId: Unit["id"], start: Date, end: Date) =>
@@ -23,17 +23,22 @@ export const getSpartaView = (unitId: Unit["id"], start: Date, end: Date) =>
     },
   });
 
-export const getTeamShifts = (teamId: Team["id"], start: Date, end: Date) =>
+export const getMissionShifts = (
+  missionId: Mission["id"],
+  start: Date,
+  end: Date
+) =>
   useQuery<Shift[]>({
-    queryKey: ["teamShifts", teamId, start, end],
+    queryKey: ["missionShifts", missionId, start, end],
+    enabled: !!missionId && !!start && !!end,
     queryFn: async () => {
-      if (!teamId || !start || !end) {
+      if (!missionId || !start || !end) {
         throw Error("params are undefined");
       }
 
       return (
         await axiosRes.get(
-          `shifts/team/${teamId}/week/${formatDateToUrl(
+          `/shifts/missions/${missionId}/week/${formatDateToUrl(
             start
           )}/${formatDateToUrl(end)}`
         )

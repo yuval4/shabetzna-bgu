@@ -1,11 +1,12 @@
-import { ConstraintType } from "../../enums/constraint-types";
 import { ConstraintStatus } from "../../enums/constraint-status";
-import { User } from "./user";
+import { ConstraintType } from "../../enums/constraint-types";
 import { ShiftType } from "../../enums/shift-type";
+import { User } from "./user";
 
 export interface Constraint {
   id: string;
   user: User;
+  missionId?: string;
   date: Date;
   type: ConstraintType;
   reason: string;

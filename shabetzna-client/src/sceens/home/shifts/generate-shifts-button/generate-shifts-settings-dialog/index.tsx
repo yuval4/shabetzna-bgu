@@ -20,13 +20,13 @@ import { TeamContext } from "../../../../../context/team-context";
 import { TimeRangeViewContext } from "../../../../../context/time-range-view-context";
 import { useAllocateShifts } from "../../../../../mutations/shifts";
 import { getUsersOfTeam } from "../../../../../queries/teams";
+import { getUTCTime } from "../../../../../shared/dates/time-utils";
 import {
   ALLOCATE_SHIFT_TYPE,
   AllocateShiftType,
 } from "../../../../../shared/enums/shift-type";
 import { UserToTeam } from "../../../../../shared/types/entities/user-to-team";
 import style from "./style.module.css";
-import { getUTCTime } from "../../../../../shared/dates/time-utils";
 
 interface FormValues {
   members: UserToTeam[];
@@ -37,9 +37,10 @@ interface FormValues {
 interface Props {
   open: boolean;
   onClose: () => void;
+  missionId?: string;
 }
 
-const GenerateShiftsSettingsDialog = ({ open, onClose }: Props) => {
+const GenerateShiftsSettingsDialog = ({ open, onClose, missionId }: Props) => {
   const { selectedTeam } = useContext(TeamContext);
   const { timeRange } = useContext(TimeRangeViewContext);
   const { data: teamMembers } = getUsersOfTeam(selectedTeam.id);
@@ -57,8 +58,12 @@ const GenerateShiftsSettingsDialog = ({ open, onClose }: Props) => {
   }, [teamMembers, reset]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    if (!missionId) {
+      return;
+    }
+
     await allocateShifts({
-      teamId: selectedTeam.id,
+      missionId,
       userIds: data.members
         .filter((member) => member.isActiveShifts)
         .map((member) => member.user.id),
@@ -137,7 +142,11 @@ const GenerateShiftsSettingsDialog = ({ open, onClose }: Props) => {
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleSubmit(onSubmit)}>
+        <Button
+          variant="contained"
+          disabled={!missionId}
+          onClick={handleSubmit(onSubmit)}
+        >
           שבץנא
         </Button>
         <Button onClick={onClose}>ביטול</Button>

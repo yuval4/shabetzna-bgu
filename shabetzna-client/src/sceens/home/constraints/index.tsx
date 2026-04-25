@@ -6,11 +6,12 @@ import Disable from "../../../components/disable";
 import { TeamContext } from "../../../context/team-context";
 import { TimeRangeViewContext } from "../../../context/time-range-view-context";
 import { UserContext } from "../../../context/user-context";
-import { getConstraintByTeamAndRange } from "../../../queries/constraint";
+import { useTrack } from "../../../hooks/use-track";
+import { getConstraintByMissionAndRange } from "../../../queries/constraint";
+import { getMissionByTeamId } from "../../../queries/missions";
 import ConstraintsList from "./constraints-list";
 import CreateConstraintDialog from "./create-constraint-dialog";
 import style from "./style.module.css";
-import { useTrack } from "../../../hooks/use-track";
 
 const Constraints = () => {
   const { trackEvent } = useTrack();
@@ -18,39 +19,48 @@ const Constraints = () => {
   const { user } = useContext(UserContext);
   const { selectedTeam } = useContext(TeamContext);
   const { timeRange } = useContext(TimeRangeViewContext);
+  const { data: mission } = getMissionByTeamId(selectedTeam.id);
+  const missionId = mission?.id;
   const { data: constraints, isLoading: constraintsLoading } =
-    getConstraintByTeamAndRange(
-      selectedTeam.id,
+    getConstraintByMissionAndRange(
+      missionId ?? "",
       timeRange.start,
-      timeRange.end
+      timeRange.end,
     );
 
-  // useMemo?
-  const userConstraints = constraints?.filter(
-    (constraint) => constraint.user.id === user?.id
+  const allConstraints = constraints ?? [];
+
+  const userConstraints = allConstraints.filter(
+    (constraint) => constraint.user.id === user?.id,
   );
 
-  const otherConstraints = constraints?.filter(
-    (constraint) => constraint.user.id !== user?.id
+  const otherConstraints = allConstraints.filter(
+    (constraint) => constraint.user.id !== user?.id,
   );
 
   const handleOpenModal = () => {
     trackEvent("constraints", "open_create_modal");
-    setIsModalOpen(true)
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     trackEvent("constraints", "close_create_modal");
-    setIsModalOpen(false)
+    setIsModalOpen(false);
   };
 
   const handleFilterClick = () => {
     trackEvent("constraints", "filter");
-  }
+  };
 
   return (
     <Box className={style.container}>
-      {isModalOpen && <CreateConstraintDialog open={isModalOpen} onClose={handleCloseModal} />}
+      {isModalOpen && (
+        <CreateConstraintDialog
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          missionId={missionId}
+        />
+      )}
       <Box className={style.title}>
         <Typography variant="subtitle1">האילוצים שלי</Typography>
         <Box className={style.icons}>
@@ -75,7 +85,10 @@ const Constraints = () => {
       <Box className={style.title}>
         <Typography variant="subtitle1">הצוות שלי</Typography>
       </Box>
-      <ConstraintsList constraints={otherConstraints!} loading={constraintsLoading} />
+      <ConstraintsList
+        constraints={otherConstraints!}
+        loading={constraintsLoading}
+      />
     </Box>
   );
 };
