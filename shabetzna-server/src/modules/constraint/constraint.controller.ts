@@ -9,16 +9,13 @@ import {
   Req
 } from '@nestjs/common';
 import { Request } from 'express';
-import { TeamRole } from '../auth/consts/team-role.enum';
-import { TeamRoles } from '../auth/roles/team-roles.decorator';
-import { Team } from '../teams/entities/team.entity';
+import { MissionRole } from '../auth/consts/mission-role.enum';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
+import { Mission } from '../missions/entities/mission.entity';
 import { ConstraintService } from './constraint.service';
 import { CreateConstraintDto } from './dto/create-constraint.dto';
 import { UpdateConstraintDto } from './dto/update-constraint.dto';
 import { Constraint } from './entities/constraint.entity';
-import { Mission } from '../missions/entities/mission.entity';
-import { MissionRole } from '../auth/consts/mission-role.enum';
-import { MissionRoles } from '../auth/roles/mission-roles.decorator';
 
 @Controller('constraints')
 export class ConstraintController {
@@ -29,13 +26,13 @@ export class ConstraintController {
     return this.constraintService.findOne(id);
   }
 
-  @Get('team/:teamId/:start/:end')
-  constraintByTeamAndRange(
-    @Param('teamId') teamId: Team['id'],
+  @Get('mission/:missionId/:start/:end')
+  constraintByMissionAndRange(
+    @Param('missionId') missionId: Mission['id'],
     @Param('start') start: Date,
     @Param('end') end: Date,
   ) {
-    return this.constraintService.constraintByTeamAndRange(teamId, start, end);
+    return this.constraintService.constraintByMissionAndRange(missionId, start, end);
   }
 
   @Put()

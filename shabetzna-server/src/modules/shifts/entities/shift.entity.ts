@@ -1,6 +1,3 @@
-import { Mission } from 'src/modules/missions/entities/mission.entity';
-import { Team } from '../../teams/entities/team.entity';
-import { User } from '../../users/entities/user.entity';
 import {
   BeforeInsert,
   Column,
@@ -12,6 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Mission } from '../../missions/entities/mission.entity';
+import { User } from '../../users/entities/user.entity';
 
 export enum ShiftType {
   FULL_DAY = 'FULL_DAY',

@@ -1,18 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
-import { Team } from '../teams/entities/team.entity';
+import { UserMetadata } from '../../types';
+import { Mission } from '../missions/entities/mission.entity';
 import { CreateConstraintDto } from './dto/create-constraint.dto';
 import { UpdateConstraintDto } from './dto/update-constraint.dto';
 import { Constraint } from './entities/constraint.entity';
-import { UserMetadata } from '../../types'
 
 @Injectable()
 export class ConstraintService {
   constructor(
     @InjectRepository(Constraint)
     private constraintRepository: Repository<Constraint>,
-  ) {}
+  ) { }
 
   async upsert(
     user: UserMetadata,
@@ -20,28 +20,26 @@ export class ConstraintService {
   ): Promise<Constraint> {
     return await this.constraintRepository.save({
       user: { id: createConstraintDto.userId },
+      mission: { id: createConstraintDto.missionId },
       createdBy: user,
       updatedBy: user,
       ...createConstraintDto,
     });
   }
 
-  async constraintByTeamAndRange(
-    teamId: Team['id'],
+  async constraintByMissionAndRange(
+    missionId: Mission['id'],
     start: Date,
     end: Date,
   ): Promise<Constraint[]> {
     return await this.constraintRepository.find({
       where: {
-        user: {
-          teams: {
-            teamId,
-          },
-        },
+        missionId,
         date: Between(start, end),
       },
       relations: {
         user: true,
+        mission: true,
       },
       order: {
         date: 'ASC',
@@ -50,23 +48,20 @@ export class ConstraintService {
     });
   }
 
-  async approvedConstraintByTeamAndRange(
-    teamId: Team['id'],
+  async approvedConstraintByMissionAndRange(
+    missionId: Mission['id'],
     start: Date,
     end: Date,
   ): Promise<Constraint[]> {
     return await this.constraintRepository.find({
       where: {
-        user: {
-          teams: {
-            teamId,
-          },
-        },
+        missionId,
         date: Between(start, end),
         status: 'APPROVED',
       },
       relations: {
         user: true,
+        mission: true,
       },
       order: {
         date: 'ASC',

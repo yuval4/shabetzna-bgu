@@ -10,8 +10,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { TeamRole } from '../auth/consts/team-role.enum';
-import { TeamRoles } from '../auth/roles/team-roles.decorator';
+import { MissionRole } from '../auth/consts/mission-role.enum';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
 import { Mission } from '../missions/entities/mission.entity';
 import { Unit } from '../units/entities/unit.entity';
 import { AllocateShiftsDto } from './dto/allocate-shifts.dto';
@@ -20,8 +20,6 @@ import { UpdateShiftsManuallyDto } from './dto/update-shift-manually';
 import { UpdateShiftDto } from './dto/update-shift.dto';
 import { Shift } from './entities/shift.entity';
 import { ShiftsService } from './shifts.service';
-import { MissionRoles } from '../auth/roles/mission-roles.decorator';
-import { MissionRole } from '../auth/consts/mission-role.enum';
 
 @Controller('shifts')
 export class ShiftsController {
@@ -65,10 +63,10 @@ export class ShiftsController {
   }
 
   @MissionRoles(MissionRole.MISSION_ADMIN)
-  @Post('allocate/mission/:teamId')
+  @Post('allocate/mission/:missionId')
   async allocate(
     @Req() req: Request,
-    @Param('mission') missionId: string,
+    @Param('missionId') missionId: Mission['id'],
     @Body() body: AllocateShiftsDto,
   ): Promise<void> {
     return await this.shiftsService.allocateShifts(

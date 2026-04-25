@@ -1,4 +1,3 @@
-import { UserToMission } from 'src/modules/missions/entities/user-mission.entity';
 import {
   Column,
   CreateDateColumn,
@@ -13,6 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Constraint } from '../../constraint/entities/constraint.entity';
+import { UserToMission } from '../../missions/entities/user-mission.entity';
 import { Shift } from '../../shifts/entities/shift.entity';
 import { UserToTeam } from '../../teams/entities/user-team.entity';
 import { Points } from './points.entity';

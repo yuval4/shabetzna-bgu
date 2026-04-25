@@ -1,11 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import { ConstraintService } from '../../../modules/constraint/constraint.service';
 import { MissionsService } from '../../../modules/missions/missions.service';
+import { TeamsService } from '../../../modules/teams/teams.service';
 import { MissionRole } from '../consts/mission-role.enum';
 import { TeamRole } from '../consts/team-role.enum';
 import { MISSION_ROLES_KEY } from '../roles/mission-roles.decorator';
-import { TeamsService } from '../../../modules/teams/teams.service';
 
 @Injectable()
 export class MissionRolesGuard implements CanActivate {
@@ -13,6 +14,7 @@ export class MissionRolesGuard implements CanActivate {
     private reflector: Reflector,
     private missionsService: MissionsService,
     private teamsService: TeamsService,
+    private constraintService: ConstraintService,
   ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -24,7 +26,12 @@ export class MissionRolesGuard implements CanActivate {
 
     const request: Request = context.switchToHttp().getRequest();
     const { user, params, body } = request;
-    const missionId = params.missionId ?? body.missionId;
+    let missionId = params.missionId ?? body.missionId;
+
+    if (!missionId && params.id && context.getClass().name === 'ConstraintController') {
+      const constraint = await this.constraintService.findOne(params.id);
+      missionId = constraint.missionId;
+    }
 
     // Fetch user roles in the mission
     const userToMission = await this.missionsService.findUserMissionRole(

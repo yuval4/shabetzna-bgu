@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { UserMetadata } from '../../types';
-import { TeamRole } from '../auth/consts/team-role.enum';
+import { MissionRole } from '../auth/consts/mission-role.enum';
 import { Team } from '../teams/entities/team.entity';
 import { UserToTeam } from '../teams/entities/user-team.entity';
 import { User } from '../users/entities/user.entity';
@@ -70,7 +70,7 @@ export class MissionsService {
         createdBy: user,
         updatedBy: user,
         user: user,
-        role: TeamRole.TEAM_LEADER,
+        role: MissionRole.MISSION_ADMIN,
         missionId: newMission.id,
       });
 
@@ -98,16 +98,16 @@ export class MissionsService {
     return mission;
   }
 
-  async addUser(
-    user: UserMetadata,
-    createUserToMissionDto: CreateUserToMissionDto,
-  ): Promise<void> {
+  async addUser(user: UserMetadata, createUserToMissionDto: CreateUserToMissionDto): Promise<void> {
     await this.userToMissionRepository.save({
       createdBy: user,
       updatedBy: user,
-      ...createUserToMissionDto,
+      userId: createUserToMissionDto.userId,
+      role: createUserToMissionDto.role,
+      missionId: createUserToMissionDto.missionId,
     });
   }
+
 
   async addTeam(user: UserMetadata, teamId: Team['id']): Promise<void> {
     await this.missionRepository.manager.transaction(async (manager) => {

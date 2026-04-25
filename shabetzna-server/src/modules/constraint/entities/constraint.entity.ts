@@ -1,14 +1,15 @@
-import { User } from '../../users/entities/user.entity';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   CreateDateColumn,
-  UpdateDateColumn,
-  JoinColumn,
   DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
+import { Mission } from '../../missions/entities/mission.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity({ name: 'constraints', synchronize: true })
 export class Constraint {
@@ -26,6 +27,18 @@ export class Constraint {
 
   @Column({ type: 'uuid' })
   userId: User['id'];
+
+  @ManyToOne(() => Mission)
+  @JoinColumn([
+    {
+      name: 'mission_id',
+      referencedColumnName: 'id',
+    },
+  ])
+  mission: Mission;
+
+  @Column({ type: 'uuid' })
+  missionId: Mission['id'];
 
   @Column({ type: 'date' })
   date: Date;

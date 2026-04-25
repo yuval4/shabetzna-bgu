@@ -9,8 +9,10 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { MissionRole } from '../auth/consts/mission-role.enum';
 import { TeamRole } from '../auth/consts/team-role.enum';
 import { Public } from '../auth/guards/jwt.guard';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
 import { TeamRoles } from '../auth/roles/team-roles.decorator';
 import { User } from '../users/entities/user.entity';
 import { CreateMissionDto } from './dto/create-mission.dto';
@@ -18,8 +20,6 @@ import { CreateUserToMissionDto } from './dto/create-user-to-mission.dto';
 import { UpdateMissionDto } from './dto/update-mission.dto';
 import { Mission } from './entities/mission.entity';
 import { MissionsService } from './missions.service';
-import { MissionRoles } from '../auth/roles/mission-roles.decorator';
-import { MissionRole } from '../auth/consts/mission-role.enum';
 
 @Controller('missions')
 export class MissionsController {
