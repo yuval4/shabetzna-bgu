@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosRes from "../shared/axios-req";
-import { Team } from "../shared/types/entities/team";
-import { Constraint } from "../shared/types/entities/constraint";
 import { formatDateToUrl } from "../shared/dates/format-date";
+import { Constraint } from "../shared/types/entities/constraint";
+import { Mission } from "../shared/types/entities/mission";
 
 export const getConstraint = (id: Constraint["id"]) =>
   useQuery<Constraint>({
@@ -12,21 +12,22 @@ export const getConstraint = (id: Constraint["id"]) =>
     },
   });
 
-export const getConstraintByTeamAndRange = (
-  teamId: Team["id"],
+export const getConstraintByMissionAndRange = (
+  missionId: Mission["id"],
   start: Date,
   end: Date
 ) =>
   useQuery<Constraint[]>({
-    queryKey: ["constraints", teamId, start, end],
+    queryKey: ["constraints", missionId, start, end],
+    enabled: !!missionId && !!start && !!end,
     queryFn: async () => {
-      if (!teamId || !start || !end) {
+      if (!missionId || !start || !end) {
         throw Error("params are undefined");
       }
 
       return (
         await axiosRes.get(
-          `constraints/team/${teamId}/${formatDateToUrl(
+          `constraints/mission/${missionId}/${formatDateToUrl(
             start
           )}/${formatDateToUrl(end)}`
         )

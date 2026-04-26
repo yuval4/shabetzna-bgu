@@ -3,14 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from '../auth/auth.module';
 import { JwtGuard } from '../auth/guards/jwt.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
+import { TeamRolesGuard } from '../auth/guards/team-roles.guard';
 import { ConstraintModule } from '../constraint/constraint.module';
 import { DatabaseModule } from '../database/database.module';
+import { MissionsModule } from '../missions/missions.module';
 import { ShiftsModule } from '../shifts/shifts.module';
 import { TeamsModule } from '../teams/teams.module';
+import { UnitsModule } from '../units/units.module';
 import { UsersModule } from '../users/users.module';
 import { AppController } from './app.controller';
-import { UnitsModule } from '../units/units.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UnitsModule } from '../units/units.module';
     UnitsModule,
     ConstraintModule,
     ShiftsModule,
+    MissionsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -33,8 +35,8 @@ import { UnitsModule } from '../units/units.module';
     },
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useClass: TeamRolesGuard,
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

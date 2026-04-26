@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors({
     origin:
       process.env.ENV === ENV.DEVELOPMENT
-        ? 'https://' + process.env.VERCEL_BRANCH_URL.replace('-server', '')
+        ? /https:\/\/.*\.vercel\.app/
         : process.env.CLIENT_URL,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

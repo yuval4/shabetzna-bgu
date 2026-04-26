@@ -18,7 +18,10 @@ import { useRoles } from "../../../../hooks/use-roles";
 import { useCreateConstraint } from "../../../../mutations/constraint";
 import { getUsersOfTeam } from "../../../../queries/teams";
 import { addDays } from "../../../../shared/dates/time-utils";
-import { CONSTRAINT_TYPES, ConstraintType } from "../../../../shared/enums/constraint-types";
+import {
+  CONSTRAINT_TYPES,
+  ConstraintType,
+} from "../../../../shared/enums/constraint-types";
 import { Days, DAYS } from "../../../../shared/enums/days";
 import { SHIFT_TYPE, ShiftType } from "../../../../shared/enums/shift-type";
 import { Constraint } from "../../../../shared/types/entities/constraint";
@@ -28,6 +31,7 @@ import style from "./style.module.css";
 interface Props {
   open: boolean;
   onClose: () => void;
+  missionId?: string;
   constraint?: Constraint;
 }
 
@@ -39,38 +43,45 @@ interface FormInput {
   shiftType: ShiftType;
 }
 
-const CreateConstraintDialog = ({ open, onClose, constraint }: Props) => {
+const CreateConstraintDialog = ({ open, onClose, constraint, missionId }: Props) => {
   const { user } = useContext(UserContext);
   const { selectedTeam } = useContext(TeamContext);
   const { hasRole } = useRoles();
   const { register, handleSubmit, getValues, setValue } = useForm<FormInput>(
-    constraint ? {
-      defaultValues: {
-        userId: constraint.user.id ?? user?.id,
-        day: Object.keys(DAYS)[new Date(constraint.date).getDay()] as Days,
-        type: constraint.type,
-        reason: constraint.reason,
-        shiftType: constraint.shiftType,
-      },
-    }
-      :
-      {
-        defaultValues: {
-          userId: user?.id ?? "6e047ebc-f041-4f38-802e-13cfcbedb243",
+    constraint
+      ? {
+          defaultValues: {
+            userId: constraint.user.id ?? user?.id,
+            day: Object.keys(DAYS)[new Date(constraint.date).getDay()] as Days,
+            type: constraint.type,
+            reason: constraint.reason,
+            shiftType: constraint.shiftType,
+          },
+        }
+      : {
+          defaultValues: {
+            userId: user?.id ?? "6e047ebc-f041-4f38-802e-13cfcbedb243",
+          },
         },
-      }
   );
   const { timeRange } = useContext(TimeRangeViewContext);
   const { isPending, mutateAsync: createConstraint } = useCreateConstraint();
-  const { data: teamUsers, isLoading: isLoadingUsers } = getUsersOfTeam(selectedTeam.id);
+  const { data: teamUsers, isLoading: isLoadingUsers } = getUsersOfTeam(
+    selectedTeam.id,
+  );
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    if (!missionId) {
+      return;
+    }
+
     const dayIndex =
       Object.values(DAYS).find((value) => value.id === data.day)?.index ?? 0;
 
     await createConstraint({
       ...(constraint?.id && { id: constraint.id }),
       userId: data.userId,
+      missionId,
       date: addDays(timeRange.start, dayIndex),
       type: data.type,
       reason: data.reason,
@@ -92,16 +103,19 @@ const CreateConstraintDialog = ({ open, onClose, constraint }: Props) => {
           <AutocompleteRTL
             options={users}
             autoHighlight
-            defaultValue={users?.find(currentUser => currentUser.id === getValues("userId"))}
+            defaultValue={users?.find(
+              (currentUser) => currentUser.id === getValues("userId"),
+            )}
             getOptionLabel={(option) => option.username}
             disableClearable
             disabled={isLoadingUsers}
             onChange={(_event: any, newValue: User | null) => {
               newValue && setValue("userId", newValue.id);
             }}
-            renderInput={(params) => <TextField {...params} placeholder="מי?" />}
+            renderInput={(params) => (
+              <TextField {...params} placeholder="מי?" />
+            )}
           />
-
         </Disable>
         <AutocompleteRTL
           options={Object.keys(CONSTRAINT_TYPES)}
@@ -120,8 +134,7 @@ const CreateConstraintDialog = ({ open, onClose, constraint }: Props) => {
                 setValueAs: (value) =>
                   Object.keys(CONSTRAINT_TYPES).find(
                     (key) =>
-                      CONSTRAINT_TYPES[key as ConstraintType]
-                        .label === value
+                      CONSTRAINT_TYPES[key as ConstraintType].label === value,
                   ),
               })}
             />
@@ -141,9 +154,7 @@ const CreateConstraintDialog = ({ open, onClose, constraint }: Props) => {
                 required: true,
                 setValueAs: (value) =>
                   Object.keys(DAYS).find(
-                    (key) =>
-                      DAYS[key as Days]
-                        .label === value
+                    (key) => DAYS[key as Days].label === value,
                   ),
               })}
             />
@@ -165,9 +176,7 @@ const CreateConstraintDialog = ({ open, onClose, constraint }: Props) => {
                 required: true,
                 setValueAs: (value) =>
                   Object.keys(SHIFT_TYPE).find(
-                    (key) =>
-                      SHIFT_TYPE[key as ShiftType]
-                        .label === value
+                    (key) => SHIFT_TYPE[key as ShiftType].label === value,
                   ),
               })}
             />

@@ -10,20 +10,20 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Roles } from '../auth/roles/roles.decorator'
-import { Role } from '../auth/consts/role.enum';
-import { Team } from '../teams/entities/team.entity';
+import { MissionRole } from '../auth/consts/mission-role.enum';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
+import { Mission } from '../missions/entities/mission.entity';
+import { Unit } from '../units/entities/unit.entity';
 import { AllocateShiftsDto } from './dto/allocate-shifts.dto';
 import { CreateShiftDto } from './dto/create-shift.dto';
+import { UpdateShiftsManuallyDto } from './dto/update-shift-manually';
 import { UpdateShiftDto } from './dto/update-shift.dto';
 import { Shift } from './entities/shift.entity';
 import { ShiftsService } from './shifts.service';
-import { UpdateShiftsManuallyDto } from './dto/update-shift-manually';
-import { Unit } from '../units/entities/unit.entity';
 
 @Controller('shifts')
 export class ShiftsController {
-  constructor(private readonly shiftsService: ShiftsService) {}
+  constructor(private readonly shiftsService: ShiftsService) { }
 
   @Get('sparta/:unitId/:start/:end')
   sparta(
@@ -34,16 +34,16 @@ export class ShiftsController {
     return this.shiftsService.spartaView(unitId, start, end);
   }
 
-  @Get('team/:teamId/week/:start/:end')
-  teamShifts(
-    @Param('teamId') teamId: Team['id'],
+  @Get('missions/:missionId/week/:start/:end')
+  missionShifts(
+    @Param('missionId') missionId: Mission['id'],
     @Param('start') start: Date,
     @Param('end') end: Date,
   ): Promise<Shift[]> {
-    return this.shiftsService.teamShifts(teamId, start, end);
+    return this.shiftsService.missionShifts(missionId, start, end);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Patch(':id')
   updateById(
     @Req() req: Request,
@@ -53,7 +53,7 @@ export class ShiftsController {
     return this.shiftsService.update(req.user, id, updateShiftDto);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Post()
   create(
     @Req() req: Request,
@@ -62,16 +62,16 @@ export class ShiftsController {
     return this.shiftsService.create(req.user, createShiftDto);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
-  @Post('allocate/team/:teamId')
+  @MissionRoles(MissionRole.MISSION_ADMIN)
+  @Post('allocate/mission/:missionId')
   async allocate(
     @Req() req: Request,
-    @Param('teamId') teamId: string,
+    @Param('missionId') missionId: Mission['id'],
     @Body() body: AllocateShiftsDto,
   ): Promise<void> {
     return await this.shiftsService.allocateShifts(
       req.user,
-      teamId,
+      missionId,
       body.userIds,
       {
         start: body.start,
@@ -82,7 +82,7 @@ export class ShiftsController {
     );
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Put()
   async updateShifts(
     @Req() req: Request,
@@ -95,7 +95,7 @@ export class ShiftsController {
     );
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: string): Promise<void> {
     return this.shiftsService.remove(req.user, id);

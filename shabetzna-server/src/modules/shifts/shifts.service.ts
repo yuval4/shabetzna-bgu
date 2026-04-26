@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
-import { UserMetadata } from '../../types';
 import { Between, In, IsNull, Repository } from 'typeorm';
+import { UserMetadata } from '../../types';
 import { dateWithoutTime } from '../../utils/dates/date-without-time';
 import { getDatesBetween } from '../../utils/dates/get-dates-between';
 import { ConstraintService } from '../constraint/constraint.service';
-import { Team } from '../teams/entities/team.entity';
+import { Mission } from '../missions/entities/mission.entity';
 import { Unit } from '../units/entities/unit.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateShiftDto } from './dto/create-shift.dto';
@@ -19,7 +19,7 @@ export class ShiftsService {
   constructor(
     @InjectRepository(Shift) private shiftRepository: Repository<Shift>,
     private constraintService: ConstraintService,
-  ) {}
+  ) { }
 
   async spartaView(
     unitId: Unit['id'],
@@ -29,13 +29,15 @@ export class ShiftsService {
     return await this.shiftRepository.find({
       where: {
         date: Between(start, end),
-        team: {
-          unitId,
+        mission: {
+          team: {
+            unitId,
+          },
         },
       },
       relations: {
         assignedUser: true,
-        team: true,
+        mission: true,
       },
       order: {
         date: 'ASC',
@@ -43,14 +45,14 @@ export class ShiftsService {
     });
   }
 
-  async teamShifts(
-    teamId: Team['id'],
+  async missionShifts(
+    missionId: Mission['id'],
     start: Date,
     end: Date,
   ): Promise<Shift[]> {
     return await this.shiftRepository.find({
       where: {
-        teamId,
+        missionId,
         date: Between(start, end),
       },
       relations: {
@@ -62,10 +64,10 @@ export class ShiftsService {
     });
   }
 
-  async teamShiftsForAlgorithm(teamId: Team['id']): Promise<Shift[]> {
+  async missionShiftsForAlgorithm(missionId: Mission['id']): Promise<Shift[]> {
     return await this.shiftRepository.find({
       where: {
-        teamId,
+        missionId,
       },
       select: ['id', 'date', 'assignedUserId', 'shiftType', 'isReadiness'],
       order: {
@@ -76,7 +78,7 @@ export class ShiftsService {
 
   async allocateShifts(
     user: UserMetadata,
-    teamId: Team['id'],
+    missionId: Mission['id'],
     userIds: User['id'][],
     range: { start: Date; end: Date },
     shiftsType: AllocateShiftType = AllocateShiftType.FULL_DAY,
@@ -85,14 +87,14 @@ export class ShiftsService {
     const shiftsDates = getDatesBetween(range.start, range.end);
 
     const constraints =
-      await this.constraintService.approvedConstraintByTeamAndRange(
-        teamId,
+      await this.constraintService.approvedConstraintByMissionAndRange(
+        missionId,
         range.start,
         range.end,
       );
 
     try {
-      const prevShifts = await this.teamShiftsForAlgorithm(teamId);
+      const prevShifts = await this.missionShiftsForAlgorithm(missionId);
       const algorithmData = {
         userIds,
         shiftsDates,
@@ -118,7 +120,7 @@ export class ShiftsService {
         const userShifts = allocatedShifts.data.map((shift) => {
           return manager.create(Shift, {
             date: new Date(shift.date),
-            teamId,
+            missionId,
             assignedUser: { id: shift.userId },
             shiftType: shift.shiftType,
             createdBy: user,
@@ -131,7 +133,7 @@ export class ShiftsService {
         );
       });
     } catch (error) {
-      throw Error(error);
+      throw Error(error as string);
     }
   }
 
@@ -150,7 +152,7 @@ export class ShiftsService {
         relations: ['assignedUser', 'createdBy', 'updatedBy'],
         select: [
           'id',
-          'teamId',
+          'missionId',
           'date',
           'comment',
           'shiftType',

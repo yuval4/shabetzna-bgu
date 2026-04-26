@@ -11,8 +11,9 @@ import { TimeRangeViewContext } from "../../../context/time-range-view-context";
 import { UserContext } from "../../../context/user-context";
 import { useRoles } from "../../../hooks/use-roles";
 import { useTrack } from "../../../hooks/use-track";
-import { getConstraintByTeamAndRange } from "../../../queries/constraint";
-import { getTeamShifts } from "../../../queries/shifts";
+import { getConstraintByMissionAndRange } from "../../../queries/constraint";
+import { getMissionByTeamId } from "../../../queries/missions";
+import { getMissionShifts } from "../../../queries/shifts";
 import { formatDate, weekDay } from "../../../shared/dates/format-date";
 import { isHistory } from "../../../shared/dates/time-utils";
 import { formatPhone } from "../../../shared/format/phone";
@@ -30,26 +31,34 @@ const Shifts = () => {
   const { timeRange, handleNextWeek, handlePrevWeek } =
     useContext(TimeRangeViewContext);
   const { selectedTeam } = useContext(TeamContext);
-  const { data: shifts, isLoading: shiftsLoading } = getTeamShifts(
-    selectedTeam.id,
+  const { data: mission } = getMissionByTeamId(selectedTeam.id);
+  const missionId = mission?.id;
+  const { data: shifts, isLoading: shiftsLoading } = getMissionShifts(
+    missionId ?? "",
     timeRange.start,
-    timeRange.end
+    timeRange.end,
   );
-  const { data: constraints } =
-    getConstraintByTeamAndRange(
-      selectedTeam.id,
-      timeRange.start,
-      timeRange.end
-    );
-
+  const { data: constraints } = getConstraintByMissionAndRange(
+    missionId ?? "",
+    timeRange.start,
+    timeRange.end,
+  );
+  const canManageShifts = !!missionId;
 
   const handleOpenDialog = () => {
-    const isPendingConstraints = (constraints ?? []).some((constraint) => constraint.status === "PENDING" || !constraint.status);
+    const isPendingConstraints = (constraints ?? []).some(
+      (constraint) => constraint.status === "PENDING" || !constraint.status,
+    );
 
     trackEvent("shifts", "open_create_modal", { isPendingConstraints });
 
-    if (!isPendingConstraints || window.confirm("רגע לפני, נראה שיש אילוצים שעדיין לא אושרו. \n להמשיך בכל זאת?")) {
-      setOpen(true)
+    if (
+      !isPendingConstraints ||
+      window.confirm(
+        "רגע לפני, נראה שיש אילוצים שעדיין לא אושרו. \n להמשיך בכל זאת?",
+      )
+    ) {
+      setOpen(true);
     }
   };
 
@@ -79,39 +88,46 @@ const Shifts = () => {
     utils.book_append_sheet(workbook, worksheet, "Sheet1");
     writeFileXLSX(
       workbook,
-      `shifts${formatDate(timeRange.start)}-${formatDate(timeRange.end)}.xlsx`
+      `shifts${formatDate(timeRange.start)}-${formatDate(timeRange.end)}.xlsx`,
     );
   };
 
   const handleEditShiftsModalOpen = () => {
-    trackEvent("shifts", "open_edit_modal", { existingShiftsAmount: shifts?.length });
-    setEditShiftsModalOpen(true)
+    trackEvent("shifts", "open_edit_modal", {
+      existingShiftsAmount: shifts?.length,
+    });
+    setEditShiftsModalOpen(true);
   };
 
   const handleEditShiftsModalClose = () => setEditShiftsModalOpen(false);
 
   return (
     <Box className={style.container}>
-      {isEditShiftsModalOpen &&
+      {isEditShiftsModalOpen && (
         <EditShiftsDialog
           open={isEditShiftsModalOpen}
           onClose={handleEditShiftsModalClose}
           shifts={shifts || []}
+          missionId={missionId}
         />
-      }
+      )}
 
       <Box className={style.actions}>
-        {hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"]) &&
+        {hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"]) && (
           <IconButton
+            disabled={!canManageShifts}
             onClick={handleEditShiftsModalOpen}
             className={style.actionIcon}
             title="עריכת משמרות"
           >
             <AppRegistrationIcon />
           </IconButton>
-        }
+        )}
 
-        <Disable disabled={shifts?.length === 0} reason="לא קיימות משמרות לייצוא">
+        <Disable
+          disabled={shifts?.length === 0}
+          reason="לא קיימות משמרות לייצוא"
+        >
           <IconButton
             onClick={handleExportToExcel}
             className={style.actionIcon}
@@ -125,7 +141,7 @@ const Shifts = () => {
       <ShiftsTable
         loading={shiftsLoading}
         title={`שבצק שבוע ${formatDate(timeRange.start)} - ${formatDate(
-          timeRange.end
+          timeRange.end,
         )}`}
         columns={columns}
         minimizedColumns={minimizedColumns}
@@ -134,19 +150,25 @@ const Shifts = () => {
         onPrev={handlePrevWeek}
         highlightedRow={(shift) => shift?.assignedUser?.id === user?.id}
         isHistory={(shift) => isHistory(shift.date)}
-        noData={hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"])
-          ?
-          <Button
-            variant="glow"
-            onClick={handleOpenDialog}
-            endIcon={<AutoFixHighIcon />}
-          >
-            שַׁבֵּץנָא
-          </Button> : undefined}
+        noData={
+          hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"]) ? (
+            <Button
+              variant="glow"
+              onClick={handleOpenDialog}
+              endIcon={<AutoFixHighIcon />}
+            >
+              שַׁבֵּץנָא
+            </Button>
+          ) : undefined
+        }
       />
 
-      <GenerateShiftsSettingsDialog open={open} onClose={handleCloseDialog} />
-    </Box >
+      <GenerateShiftsSettingsDialog
+        open={open}
+        onClose={handleCloseDialog}
+        missionId={missionId}
+      />
+    </Box>
   );
 };
 

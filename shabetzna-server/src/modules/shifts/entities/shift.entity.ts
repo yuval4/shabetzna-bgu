@@ -1,5 +1,3 @@
-import { Team } from '../../teams/entities/team.entity';
-import { User } from '../../users/entities/user.entity';
 import {
   BeforeInsert,
   Column,
@@ -11,6 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Mission } from '../../missions/entities/mission.entity';
+import { User } from '../../users/entities/user.entity';
 
 export enum ShiftType {
   FULL_DAY = 'FULL_DAY',
@@ -24,7 +24,7 @@ export class Shift {
   id: string;
 
   @Column({ type: 'uuid' })
-  teamId: string;
+  missionId: string;
 
   @Column({ type: 'date' })
   date: Date;
@@ -93,8 +93,8 @@ export class Shift {
   ])
   updatedBy: User;
 
-  @ManyToOne(() => Team, (team) => team.id)
-  team: Team;
+  @ManyToOne(() => Mission, (mission) => mission.id)
+  mission: Mission;
 
   @BeforeInsert()
   setShiftFlags() {

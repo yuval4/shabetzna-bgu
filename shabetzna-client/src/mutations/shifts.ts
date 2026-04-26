@@ -1,28 +1,27 @@
 import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
 import { queryClient } from "../app";
 import axiosRes from "../shared/axios-req";
-import { Team } from "../shared/types/entities/team";
-import { User } from "../shared/types/entities/user";
 import { Shift } from "../shared/types/entities/shift";
+import { User } from "../shared/types/entities/user";
 
 export const useAllocateShifts = () =>
   useMutation({
     mutationFn: async ({
-      teamId,
+      missionId,
       userIds,
       shiftsType,
       start,
       end,
       usersPerShift,
     }: {
-      teamId: Team["id"];
+      missionId: string;
       userIds: User["id"][];
       shiftsType: string;
       start: Date;
       end: Date;
       usersPerShift?: number;
     }) => {
-      return await axiosRes.post(`shifts/allocate/team/${teamId}`, {
+      return await axiosRes.post(`shifts/allocate/mission/${missionId}`, {
         userIds,
         shiftsType,
         start,
@@ -33,7 +32,7 @@ export const useAllocateShifts = () =>
     onSuccess: () => {
       return queryClient.invalidateQueries([
         "shifts",
-        "teamShifts",
+        "missionShifts",
         "spartaView",
       ] as InvalidateQueryFilters);
     },
@@ -56,7 +55,7 @@ export const useUpdateShifts = () =>
     onSuccess: () => {
       return queryClient.invalidateQueries([
         "shifts",
-        "teamShifts",
+        "missionShifts",
         "spartaView",
       ] as InvalidateQueryFilters);
     },

@@ -5,35 +5,34 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   Put,
-  Req,
+  Req
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Roles } from '../auth/roles/roles.decorator'
-import { Team } from '../teams/entities/team.entity';
+import { MissionRole } from '../auth/consts/mission-role.enum';
+import { MissionRoles } from '../auth/roles/mission-roles.decorator';
+import { Mission } from '../missions/entities/mission.entity';
 import { ConstraintService } from './constraint.service';
 import { CreateConstraintDto } from './dto/create-constraint.dto';
 import { UpdateConstraintDto } from './dto/update-constraint.dto';
 import { Constraint } from './entities/constraint.entity';
-import { Role } from '../auth/consts/role.enum';
 
 @Controller('constraints')
 export class ConstraintController {
-  constructor(private readonly constraintService: ConstraintService) {}
+  constructor(private readonly constraintService: ConstraintService) { }
 
   @Get(':id')
   findOne(@Param('id') id: Constraint['id']) {
     return this.constraintService.findOne(id);
   }
 
-  @Get('team/:teamId/:start/:end')
-  constraintByTeamAndRange(
-    @Param('teamId') teamId: Team['id'],
+  @Get('mission/:missionId/:start/:end')
+  constraintByMissionAndRange(
+    @Param('missionId') missionId: Mission['id'],
     @Param('start') start: Date,
     @Param('end') end: Date,
   ) {
-    return this.constraintService.constraintByTeamAndRange(teamId, start, end);
+    return this.constraintService.constraintByMissionAndRange(missionId, start, end);
   }
 
   @Put()
@@ -53,13 +52,14 @@ export class ConstraintController {
     return this.constraintService.update(req.user, id, updateConstraintDto);
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  // TODO - change
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Put(':id/approve')
   approve(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'APPROVED' });
   }
 
-  @Roles(Role.SHIFTS_ADMIN, Role.TEAM_LEADER)
+  @MissionRoles(MissionRole.MISSION_ADMIN)
   @Put(':id/reject')
   reject(@Req() req: Request, @Param('id') id: Constraint['id']) {
     return this.constraintService.update(req.user, id, { status: 'REJECTED' });
