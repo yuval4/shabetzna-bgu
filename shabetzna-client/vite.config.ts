@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import vercel from "vite-plugin-vercel";
+import { defineConfig } from "vite";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
+import vercel from "vite-plugin-vercel";
 
 const manifestForPlugIn: Partial<VitePWAOptions> = {
   registerType: "autoUpdate",
@@ -30,7 +30,7 @@ const manifestForPlugIn: Partial<VitePWAOptions> = {
 export default defineConfig({
   plugins: [react(), vercel(), VitePWA(manifestForPlugIn)],
   define: {
-    "process.env.VITE_SERVER_URL": JSON.stringify(process.env.VITE_SERVER_URL),
+    "process.env.VITE_BACKEND_URL": JSON.stringify(process.env.VITE_BACKEND_URL),
     "process.env.VITE_CHAT_URL": JSON.stringify(process.env.VITE_CHAT_URL),
     "process.env.VITE_ENV": JSON.stringify(process.env.VITE_ENV),
     "process.env.VITE_GA_TRACKING_ID": JSON.stringify(
