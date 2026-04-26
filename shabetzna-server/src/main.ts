@@ -8,8 +8,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors({
     origin:
-      process.env.VITE_ENV === ENV.DEVELOPMENT
-        ? /https:\/\/.*\.vercel\.app\//
+      process.env.ENV === ENV.DEVELOPMENT
+        ? /https:\/\/.*\.vercel\.app/
         : process.env.CLIENT_URL,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
