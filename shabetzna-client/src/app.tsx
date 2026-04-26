@@ -5,8 +5,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import ReactGA from 'react-ga4';
-import OneSignal from 'react-onesignal';
+import ReactGA from "react-ga4";
+import OneSignal from "react-onesignal";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import TrackPosthogPageView from "./components/track-posthog-page-view";
 import { TeamProvider } from "./context/team-context";
@@ -35,19 +35,23 @@ export const queryClient = new QueryClient({
 
 const App = () => {
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      OneSignal.init({
-        appId: import.meta.env.VITE_ONE_SIGNAL_APP_ID,
-        notifyButton: {
-          enable: true,
-        },
-        allowLocalhostAsSecureOrigin: import.meta.env.VITE_ENV === ENV.LOCAL
-      });
+    if (typeof window !== "undefined") {
+      if (import.meta.env.VITE_ONE_SIGNAL_APP_ID) {
+        OneSignal.init({
+          appId: import.meta.env.VITE_ONE_SIGNAL_APP_ID,
+          notifyButton: {
+            enable: true,
+          },
+          allowLocalhostAsSecureOrigin: import.meta.env.VITE_ENV === ENV.LOCAL,
+        });
+      }
     }
   }, []);
 
-
-  if (import.meta.env.VITE_ENV === ENV.PRODUCTION && import.meta.env.VITE_GA_TRACKING_ID) {
+  if (
+    import.meta.env.VITE_ENV === ENV.PRODUCTION &&
+    import.meta.env.VITE_GA_TRACKING_ID
+  ) {
     ReactGA.initialize(import.meta.env.VITE_GA_TRACKING_ID);
   }
 
@@ -69,7 +73,10 @@ const App = () => {
     key: "material-ui-rtl",
   });
 
-  const Login = booleanValue(import.meta.env.VITE_USE_GOOGLE_AUTH) === true ? LoginScreen : LocalLoginScreen;
+  const Login =
+    booleanValue(import.meta.env.VITE_USE_GOOGLE_AUTH) === true
+      ? LoginScreen
+      : LocalLoginScreen;
 
   return (
     <CacheProvider value={cache}>
