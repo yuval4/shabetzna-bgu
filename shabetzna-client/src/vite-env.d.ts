@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_BACKEND_URL: string;
+  readonly VITE_SERVER_URL: string;
   readonly VITE_CHAT_URL: string;
   readonly VITE_ENV: string;
   readonly VITE_GA_TRACKING_ID: string;
