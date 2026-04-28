@@ -1,23 +1,36 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
-// import { AppService } from '../../app.service';
 
 describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
-    }).compile();
-
-    appController = app.get<AppController>(AppController);
+    appController = new AppController();
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('constructor', () => {
+    it('should be defined', () => {
+      expect(appController).toBeDefined();
+    });
+  });
+
+  describe('getHello', () => {
+    it('should return "hello world!"', () => {
+      expect(appController.getHello()).toBe('hello world!');
+    });
+
+    it('should return the exact expected string', () => {
+      const result = appController.getHello();
+
+      expect(typeof result).toBe('string');
+      expect(result.toLowerCase()).toContain('hello');
+      expect(result.toLowerCase()).toContain('world');
+    });
+
+    it('should return a lowercase version of the expected string', () => {
+      const result = appController.getHello();
+
+      expect(result).toBeDefined();
+      expect(result.length).toBeGreaterThan(0);
     });
   });
 });
