@@ -1,0 +1,124 @@
+.container {
+  padding: 24px;
+  max-width: 1180px;
+  margin: 0 auto;
+  color: #111827;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.note {
+  margin-top: 8px;
+  color: #475569;
+}
+
+.section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.scenarioMeta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 64px;
+}
+
+.statusLine {
+  margin-top: 12px;
+  color: #475569;
+}
+
+.issueMessage {
+  margin-top: 12px;
+  color: #b91c1c;
+}
+
+.constraintPanel {
+  margin-top: 16px;
+}
+
+.constraintList {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.constraintItem {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.tableWrapper {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 100%;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  text-align: left;
+}
+
+.table th {
+  background: #f8fafc;
+}
+
+.summaryCard {
+  padding: 16px;
+  border-radius: 14px;
+  background: #f8fafc;
+  min-height: 86px;
+}
+
+@media (max-width: 960px) {
+  .constraintPanel {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    padding: 12px;
+    margin: 0 -20px -16px -20px;
+    border-bottom: 2px solid #e2e8f0;
+    z-index: 10;
+  }
+
+  .constraintList {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}

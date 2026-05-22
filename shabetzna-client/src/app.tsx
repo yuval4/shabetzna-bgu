@@ -18,6 +18,7 @@ import GeneralError from "./sceens/error/general-error";
 import Unauthorized from "./sceens/error/unauthorized";
 import LoginScreen from "./sceens/login";
 import LocalLoginScreen from "./sceens/login/local-login";
+import ShiftAbTest from "./sceens/shift-ab-test";
 import { ENV } from "./shared/consts";
 import { booleanValue } from "./shared/format/boolean-value";
 import ProtectedRoute from "./shared/routes/protected-route";
@@ -60,7 +61,7 @@ const App = () => {
     root.style.setProperty("--mui-primary-main", theme.palette.primary.main);
     root.style.setProperty(
       "--mui-secondary-main",
-      theme.palette.secondary.main
+      theme.palette.secondary.main,
     );
     root.style.setProperty("--mui-grey-A200", theme.palette.grey["A200"]);
     root.style.setProperty("--mui-grey-A400", theme.palette.grey["A400"]);
@@ -91,6 +92,7 @@ const App = () => {
                     <TrackPosthogPageView />
                     <Routes>
                       <Route path="login" element={<Login />} />
+                      <Route path="shift-ab-test" element={<ShiftAbTest />} />
                       <Route path="/" element={<Layout />}>
                         {pages.map((page) => (
                           <Route

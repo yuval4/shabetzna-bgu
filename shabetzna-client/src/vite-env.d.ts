@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_GA_TRACKING_ID: string;
   readonly VITE_ONE_SIGNAL_APP_ID: string;
   readonly VITE_USE_GOOGLE_AUTH: string;
+  readonly VITE_ALGORITHM_URL: string;
   // more env variables...
 }
 
