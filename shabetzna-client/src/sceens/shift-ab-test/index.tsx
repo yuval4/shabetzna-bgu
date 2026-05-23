@@ -1,3 +1,4 @@
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Box,
@@ -225,6 +226,11 @@ const ShiftAbTest = () => {
     field: "userId" | "shiftType",
     value: string,
   ) => {
+    // Start timer on first change
+    if (manualStart === null && manualTimeSeconds === null) {
+      setManualStart(Date.now());
+    }
+
     setManualShifts((current) =>
       current.map((shift) =>
         shift.rowIndex !== rowIndex
@@ -575,47 +581,43 @@ const ShiftAbTest = () => {
       </Box>
 
       <Grid container spacing={2}>
-        <Grid item xs={12} lg={6}>
-          <Box className={style.section}>
-            <Box className={style.sectionHeader}>
-              <Typography variant="h6">משימה ידנית</Typography>
-              <Box className={style.buttonGroup}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleStartManual}
-                >
-                  התחלת טיימר
-                </Button>
-                {/* <Button variant="outlined" onClick={handleStopManual}>
-                  עצירה
-                </Button>
-                <Button variant="outlined" onClick={handleResetManual}>
-                  אפס
-                </Button> */}
-                <Tooltip
-                  title={
-                    manualIssues.length
-                      ? manualIssues.join(" \u2022 ")
-                      : "הנתונים נבדקים"
-                  }
-                  arrow
-                  placement="top"
-                >
-                  <span>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleManualDone}
-                      disabled={!manualShifts.length}
-                    >
-                      סיום
-                    </Button>
-                  </span>
-                </Tooltip>
+        {scenario.testType === "manual" && (
+          <Grid item xs={12} lg={6}>
+            <Box className={style.section}>
+              <Box className={style.sectionHeader}>
+                <Typography variant="h6">משימה ידנית</Typography>
+                <Box className={style.buttonGroup}>
+                  {/* Timer starts automatically on first shift placement */}
+                  {/* <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleStartManual}
+                  >
+                    התחלת טיימר
+                  </Button> */}
+                  <Tooltip
+                    title={
+                      manualIssues.length
+                        ? manualIssues.join(" \u2022 ")
+                        : "הנתונים נבדקים"
+                    }
+                    arrow
+                    placement="top"
+                  >
+                    <span>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleManualDone}
+                        disabled={!manualShifts.length}
+                      >
+                        סיום
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </Box>
               </Box>
-            </Box>
-            {/* <Typography variant="body2" className={style.statusLine}>
+              {/* <Typography variant="body2" className={style.statusLine}>
               זמן משימה ידנית:{" "}
               {formatTime(
                 manualStart
@@ -624,47 +626,69 @@ const ShiftAbTest = () => {
               )}
               {manualDone ? " (הושלם)" : ""}
             </Typography> */}
-            {manualIssues.length > 0 && (
-              <Typography
-                variant="body2"
-                color="error"
-                className={style.issueMessage}
-              >
-                יש עוד בעיות באילוצים. הסר את הבעיות לפני סיום.
-              </Typography>
-            )}
-            <ShiftsTable
-              title="טבלת משמרות ידנית"
-              columns={manualColumns}
-              minimizedColumns={manualColumns}
-              rows={manualShifts}
-              onNext={() => {}}
-              onPrev={() => {}}
-            />
-          </Box>
-        </Grid>
-
-        <Grid item xs={12} lg={6}>
-          <Box className={style.section}>
-            <Box className={style.sectionHeader}>
-              <Typography variant="h6">משימת האלגוריתם</Typography>
-              <Box className={style.buttonGroup}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleRunAlgorithm}
+              {manualDone && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 2,
+                    p: 1.5,
+                    bgcolor: "#e8f5e9",
+                    borderRadius: 1,
+                  }}
                 >
-                  {algorithmLabel}
-                </Button>
-                {/* Review timer starts automatically when algorithm finishes; user edits until pressing סיום */}
-                {/* <Button
+                  <CheckCircleIcon sx={{ color: "#4caf50", fontSize: 24 }} />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#2e7d32", fontWeight: 500 }}
+                  >
+                    ✓ המשימה הידנית הושלמה בהצלחה
+                  </Typography>
+                </Box>
+              )}
+              {manualIssues.length > 0 && (
+                <Typography
+                  variant="body2"
+                  color="error"
+                  className={style.issueMessage}
+                >
+                  יש עוד בעיות באילוצים. הסר את הבעיות לפני סיום.
+                </Typography>
+              )}
+              <ShiftsTable
+                title="טבלת משמרות ידנית"
+                columns={manualColumns}
+                minimizedColumns={manualColumns}
+                rows={manualShifts}
+                onNext={() => {}}
+                onPrev={() => {}}
+              />
+            </Box>
+          </Grid>
+        )}
+        {scenario.testType === "algorithm" && (
+          <Grid item xs={12} lg={6}>
+            <Box className={style.section}>
+              <Box className={style.sectionHeader}>
+                <Typography variant="h6">משימת האלגוריתם</Typography>
+                <Box className={style.buttonGroup}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleRunAlgorithm}
+                  >
+                    {algorithmLabel}
+                  </Button>
+                  {/* Review timer starts automatically when algorithm finishes; user edits until pressing סיום */}
+                  {/* <Button
                   variant="outlined"
                   onClick={handleResetAlgorithmReview}
                   disabled={!algorithmResult.length}
                 >
                   אפס תיקון
                 </Button> */}
-                {/* <Tooltip
+                  {/* <Tooltip
                   title={
                     algorithmValidationIssues.length
                       ? algorithmValidationIssues.join(" \u2022 ")
@@ -673,25 +697,25 @@ const ShiftAbTest = () => {
                   arrow
                   placement="top"
                 > */}
-                <span>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleAlgorithmDone}
-                    disabled={!algorithmResult.length}
-                  >
-                    סיום
-                  </Button>
-                </span>
-                {/* </Tooltip> */}
+                  <span>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleAlgorithmDone}
+                      disabled={!algorithmResult.length}
+                    >
+                      סיום
+                    </Button>
+                  </span>
+                  {/* </Tooltip> */}
+                </Box>
               </Box>
-            </Box>
-            {/* <Typography variant="body2" className={style.statusLine}>
+              {/* <Typography variant="body2" className={style.statusLine}>
               {algorithmUrl
                 ? "האלגוריתם יופעל מול נקודת ה-API שמוגדרת בסביבת הבנייה."
                 : "אין כתובת אלגוריתם מוגדרת. תוצג הדגמת תוצאה מקומית."}
             </Typography> */}
-            {/* <Typography variant="body2" className={style.statusLine}>
+              {/* <Typography variant="body2" className={style.statusLine}>
               סטטוס: {algorithmStatus}
             </Typography>
             <Typography variant="body2" className={style.statusLine}>
@@ -705,31 +729,53 @@ const ShiftAbTest = () => {
                   : algorithmReviewTimeSeconds,
               )}
               {algorithmReviewDone ? " (הושלם)" : ""}
-            </Typography> */}
-            {algorithmValidationIssues.length > 0 && (
-              <Typography
-                variant="body2"
-                color="error"
-                className={style.issueMessage}
-              >
-                יש עוד בעיות באילוצים. המשך לערוך את תוצאות האלגוריתם.
-              </Typography>
-            )}
-            {algorithmError && (
-              <Typography variant="body2" color="error">
-                {algorithmError}
-              </Typography>
-            )}
-            <ShiftsTable
-              title="תוצאות האלגוריתם"
-              columns={algorithmColumns}
-              minimizedColumns={algorithmColumns}
-              rows={algorithmResult}
-              onNext={() => {}}
-              onPrev={() => {}}
-            />
-          </Box>
-        </Grid>
+            </Typography> */}{" "}
+              {algorithmReviewDone && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 2,
+                    p: 1.5,
+                    bgcolor: "#e8f5e9",
+                    borderRadius: 1,
+                  }}
+                >
+                  <CheckCircleIcon sx={{ color: "#4caf50", fontSize: 24 }} />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#2e7d32", fontWeight: 500 }}
+                  >
+                    ✓ משימת האלגוריתם הושלמה בהצלחה
+                  </Typography>
+                </Box>
+              )}{" "}
+              {algorithmValidationIssues.length > 0 && (
+                <Typography
+                  variant="body2"
+                  color="error"
+                  className={style.issueMessage}
+                >
+                  יש עוד בעיות באילוצים. המשך לערוך את תוצאות האלגוריתם.
+                </Typography>
+              )}
+              {algorithmError && (
+                <Typography variant="body2" color="error">
+                  {algorithmError}
+                </Typography>
+              )}
+              <ShiftsTable
+                title="תוצאות האלגוריתם"
+                columns={algorithmColumns}
+                minimizedColumns={algorithmColumns}
+                rows={algorithmResult}
+                onNext={() => {}}
+                onPrev={() => {}}
+              />
+            </Box>
+          </Grid>
+        )}
       </Grid>
 
       <Box className={style.section}>
