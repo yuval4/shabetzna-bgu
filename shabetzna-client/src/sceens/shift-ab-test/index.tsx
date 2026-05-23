@@ -615,7 +615,7 @@ const ShiftAbTest = () => {
                 </Tooltip>
               </Box>
             </Box>
-            <Typography variant="body2" className={style.statusLine}>
+            {/* <Typography variant="body2" className={style.statusLine}>
               זמן משימה ידנית:{" "}
               {formatTime(
                 manualStart
@@ -623,7 +623,7 @@ const ShiftAbTest = () => {
                   : manualTimeSeconds,
               )}
               {manualDone ? " (הושלם)" : ""}
-            </Typography>
+            </Typography> */}
             {manualIssues.length > 0 && (
               <Typography
                 variant="body2"
@@ -691,7 +691,7 @@ const ShiftAbTest = () => {
                 ? "האלגוריתם יופעל מול נקודת ה-API שמוגדרת בסביבת הבנייה."
                 : "אין כתובת אלגוריתם מוגדרת. תוצג הדגמת תוצאה מקומית."}
             </Typography> */}
-            <Typography variant="body2" className={style.statusLine}>
+            {/* <Typography variant="body2" className={style.statusLine}>
               סטטוס: {algorithmStatus}
             </Typography>
             <Typography variant="body2" className={style.statusLine}>
@@ -705,7 +705,7 @@ const ShiftAbTest = () => {
                   : algorithmReviewTimeSeconds,
               )}
               {algorithmReviewDone ? " (הושלם)" : ""}
-            </Typography>
+            </Typography> */}
             {algorithmValidationIssues.length > 0 && (
               <Typography
                 variant="body2"
