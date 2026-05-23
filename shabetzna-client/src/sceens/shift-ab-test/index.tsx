@@ -1,8 +1,10 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Box,
   Button,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -168,6 +170,8 @@ const ShiftAbTest = () => {
   const [manualShifts, setManualShifts] = useState<ManualShiftRow[]>(() =>
     createRows(shiftAbTestScenarios[0]),
   );
+
+  const [constraintDrawerOpen, setConstraintDrawerOpen] = useState(true);
 
   useEffect(() => {
     setManualShifts(createRows(scenario));
@@ -372,9 +376,7 @@ const ShiftAbTest = () => {
     setAlgorithmReviewDone(true);
   };
 
-  const algorithmLabel = algorithmUrl
-    ? "הרץ את האלגוריתם"
-    : "הדגמה מקומית של האלגוריתם";
+  const algorithmLabel = "הרץ את האלגוריתם";
 
   // algorithmReviewLabel removed — review starts automatically when algorithm finishes
 
@@ -535,8 +537,25 @@ const ShiftAbTest = () => {
             <Typography variant="body2">{scenario.description}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Box className={style.constraintPanel}>
-              <Typography variant="subtitle1">אילוצים בתרחיש</Typography>
+            <Box
+              className={style.constraintPanel}
+              data-open={constraintDrawerOpen}
+            >
+              <Box className={style.constraintPanelHeader}>
+                <Typography variant="subtitle1">אילוצים בתרחיש</Typography>
+                <IconButton
+                  size="small"
+                  onClick={() => setConstraintDrawerOpen(!constraintDrawerOpen)}
+                  sx={{
+                    transform: constraintDrawerOpen
+                      ? "rotate(0deg)"
+                      : "rotate(-180deg)",
+                    transition: "transform 0.3s ease",
+                  }}
+                >
+                  <ExpandMoreIcon />
+                </IconButton>
+              </Box>
               <Box className={style.constraintList}>
                 {scenario.constraints.map((constraint, index) => (
                   <Box
@@ -568,12 +587,12 @@ const ShiftAbTest = () => {
                 >
                   התחלת טיימר
                 </Button>
-                <Button variant="outlined" onClick={handleStopManual}>
+                {/* <Button variant="outlined" onClick={handleStopManual}>
                   עצירה
                 </Button>
                 <Button variant="outlined" onClick={handleResetManual}>
                   אפס
-                </Button>
+                </Button> */}
                 <Tooltip
                   title={
                     manualIssues.length
@@ -638,14 +657,14 @@ const ShiftAbTest = () => {
                   {algorithmLabel}
                 </Button>
                 {/* Review timer starts automatically when algorithm finishes; user edits until pressing סיום */}
-                <Button
+                {/* <Button
                   variant="outlined"
                   onClick={handleResetAlgorithmReview}
                   disabled={!algorithmResult.length}
                 >
                   אפס תיקון
-                </Button>
-                <Tooltip
+                </Button> */}
+                {/* <Tooltip
                   title={
                     algorithmValidationIssues.length
                       ? algorithmValidationIssues.join(" \u2022 ")
@@ -653,25 +672,25 @@ const ShiftAbTest = () => {
                   }
                   arrow
                   placement="top"
-                >
-                  <span>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleAlgorithmDone}
-                      disabled={!algorithmResult.length}
-                    >
-                      סיום
-                    </Button>
-                  </span>
-                </Tooltip>
+                > */}
+                <span>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleAlgorithmDone}
+                    disabled={!algorithmResult.length}
+                  >
+                    סיום
+                  </Button>
+                </span>
+                {/* </Tooltip> */}
               </Box>
             </Box>
-            <Typography variant="body2" className={style.statusLine}>
+            {/* <Typography variant="body2" className={style.statusLine}>
               {algorithmUrl
                 ? "האלגוריתם יופעל מול נקודת ה-API שמוגדרת בסביבת הבנייה."
                 : "אין כתובת אלגוריתם מוגדרת. תוצג הדגמת תוצאה מקומית."}
-            </Typography>
+            </Typography> */}
             <Typography variant="body2" className={style.statusLine}>
               סטטוס: {algorithmStatus}
             </Typography>

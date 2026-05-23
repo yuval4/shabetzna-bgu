@@ -62,16 +62,68 @@
 
 .constraintPanel {
   margin-top: 16px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.constraintPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .constraintList {
   display: grid;
   gap: 10px;
   margin-top: 12px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+
+@media (max-width: 960px) {
+  .container {
+    padding-bottom: 60px;
+  }
+
+  .constraintPanel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 18px rgba(15, 23, 42, 0.12);
+    z-index: 30;
+    padding: 12px;
+    transition:
+      max-height 0.3s ease,
+      padding 0.3s ease;
+    max-height: 220px;
+  }
+
+  .constraintPanel[data-open="false"] {
+    max-height: 50px;
+    padding: 8px 12px;
+  }
+
+  .constraintPanel[data-open="false"] .constraintList {
+    display: none;
+  }
+
+  .constraintList {
+    max-height: 160px;
+    margin-top: 8px;
+  }
+
+  .constraintItem {
+    padding: 5px 10px;
+  }
 }
 
 .constraintItem {
-  padding: 12px;
+  padding: 5px 10px;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   background: #f8fafc;
@@ -104,21 +156,4 @@
   border-radius: 14px;
   background: #f8fafc;
   min-height: 86px;
-}
-
-@media (max-width: 960px) {
-  .constraintPanel {
-    position: sticky;
-    top: 0;
-    background: #ffffff;
-    padding: 12px;
-    margin: 0 -20px -16px -20px;
-    border-bottom: 2px solid #e2e8f0;
-    z-index: 10;
-  }
-
-  .constraintList {
-    max-height: 200px;
-    overflow-y: auto;
-  }
 }
