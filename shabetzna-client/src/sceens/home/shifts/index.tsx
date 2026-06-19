@@ -1,10 +1,19 @@
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { Box, Button, IconButton } from "@mui/material";
-import { useContext, useState } from "react";
+import ViewWeekIcon from "@mui/icons-material/ViewWeek";
+import {
+  Box,
+  Button,
+  IconButton,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { utils, writeFileXLSX } from "xlsx";
 import Disable from "../../../components/disable";
+import ShiftsCalendar from "../../../components/shifts-calendar";
 import ShiftsTable from "../../../components/shifts-table";
 import { TeamContext } from "../../../context/team-context";
 import { TimeRangeViewContext } from "../../../context/time-range-view-context";
@@ -25,6 +34,8 @@ import style from "./style.module.css";
 const Shifts = () => {
   const { trackEvent } = useTrack();
   const [isEditShiftsModalOpen, setEditShiftsModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"week" | "month">("week");
+  const [currentMonthDate, setCurrentMonthDate] = useState(new Date());
   const { user } = useContext(UserContext);
   const { hasRole } = useRoles();
   const [open, setOpen] = useState(false);
@@ -33,15 +44,29 @@ const Shifts = () => {
   const { selectedTeam } = useContext(TeamContext);
   const { data: mission } = getMissionByTeamId(selectedTeam.id);
   const missionId = mission?.id;
+
+  // Calculate date range based on view mode
+  const getDateRange = () => {
+    if (viewMode === "month") {
+      const year = currentMonthDate.getFullYear();
+      const month = currentMonthDate.getMonth();
+      const monthStart = new Date(year, month, 1);
+      const monthEnd = new Date(year, month + 1, 0);
+      return { start: monthStart, end: monthEnd };
+    }
+    return { start: timeRange.start, end: timeRange.end };
+  };
+
+  const dateRange = getDateRange();
   const { data: shifts, isLoading: shiftsLoading } = getMissionShifts(
     missionId ?? "",
-    timeRange.start,
-    timeRange.end,
+    dateRange.start,
+    dateRange.end,
   );
   const { data: constraints } = getConstraintByMissionAndRange(
     missionId ?? "",
-    timeRange.start,
-    timeRange.end,
+    dateRange.start,
+    dateRange.end,
   );
   const canManageShifts = !!missionId;
 
@@ -88,7 +113,7 @@ const Shifts = () => {
     utils.book_append_sheet(workbook, worksheet, "Sheet1");
     writeFileXLSX(
       workbook,
-      `shifts${formatDate(timeRange.start)}-${formatDate(timeRange.end)}.xlsx`,
+      `shifts${formatDate(dateRange.start)}-${formatDate(dateRange.end)}.xlsx`,
     );
   };
 
@@ -100,6 +125,28 @@ const Shifts = () => {
   };
 
   const handleEditShiftsModalClose = () => setEditShiftsModalOpen(false);
+
+  // Update the month display when the selected week changes in month view
+  // Update month display when the selected week changes in month view
+  useEffect(() => {
+    if (viewMode === "month") {
+      setCurrentMonthDate(new Date(timeRange.start));
+    }
+  }, [timeRange, viewMode]);
+
+  const handleViewModeChange = (
+    event: any,
+    newMode: "week" | "month" | null,
+  ) => {
+    if (newMode !== null) {
+      trackEvent("shifts", "toggle_view", { view: newMode });
+      setViewMode(newMode);
+      if (newMode === "month") {
+        // When switching to month view, set the display month to the current week's month
+        setCurrentMonthDate(new Date(timeRange.start));
+      }
+    }
+  };
 
   return (
     <Box className={style.container}>
@@ -113,6 +160,21 @@ const Shifts = () => {
       )}
 
       <Box className={style.actions}>
+        <ToggleButtonGroup
+          value={viewMode}
+          exclusive
+          onChange={handleViewModeChange}
+          size="small"
+          dir="ltr"
+        >
+          <ToggleButton value="week" aria-label="שבוע">
+            <ViewWeekIcon />
+          </ToggleButton>
+          <ToggleButton value="month" aria-label="חודש">
+            <CalendarMonthIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+
         {hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"]) && (
           <IconButton
             disabled={!canManageShifts}
@@ -138,30 +200,42 @@ const Shifts = () => {
         </Disable>
       </Box>
 
-      <ShiftsTable
-        loading={shiftsLoading}
-        title={`שבצק שבוע ${formatDate(timeRange.start)} - ${formatDate(
-          timeRange.end,
-        )}`}
-        columns={columns}
-        minimizedColumns={minimizedColumns}
-        rows={shifts || []}
-        onNext={handleNextWeek}
-        onPrev={handlePrevWeek}
-        highlightedRow={(shift) => shift?.assignedUser?.id === user?.id}
-        isHistory={(shift) => isHistory(shift.date)}
-        noData={
-          hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"]) ? (
-            <Button
-              variant="glow"
-              onClick={handleOpenDialog}
-              endIcon={<AutoFixHighIcon />}
-            >
-              שַׁבֵּץנָא
-            </Button>
-          ) : undefined
-        }
-      />
+      {viewMode === "month" ? (
+        <ShiftsCalendar
+          shifts={shifts || []}
+          loading={shiftsLoading}
+          selectedWeekStart={timeRange.start}
+          selectedWeekEnd={timeRange.end}
+          currentMonthDate={currentMonthDate}
+          onPrevWeek={handlePrevWeek}
+          onNextWeek={handleNextWeek}
+        />
+      ) : (
+        <ShiftsTable
+          loading={shiftsLoading}
+          title={`שבצק שבוע ${formatDate(timeRange.start)} - ${formatDate(
+            timeRange.end,
+          )}`}
+          columns={columns}
+          minimizedColumns={minimizedColumns}
+          rows={shifts || []}
+          onNext={handleNextWeek}
+          onPrev={handlePrevWeek}
+          highlightedRow={(shift) => shift?.assignedUser?.id === user?.id}
+          isHistory={(shift) => isHistory(shift.date)}
+          noData={
+            hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"]) ? (
+              <Button
+                variant="glow"
+                onClick={handleOpenDialog}
+                endIcon={<AutoFixHighIcon />}
+              >
+                שַׁבֵּץנָא
+              </Button>
+            ) : undefined
+          }
+        />
+      )}
 
       <GenerateShiftsSettingsDialog
         open={open}

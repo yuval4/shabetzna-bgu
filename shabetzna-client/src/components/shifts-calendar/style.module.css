@@ -1,0 +1,196 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.monthTitle {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+}
+
+.weekDaysHeader {
+  margin-bottom: 0.5rem;
+}
+
+.weekDayCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.weekDayText {
+  font-weight: 600;
+  color: #666;
+}
+
+.calendarGrid {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.dayCell {
+  min-height: 100px;
+}
+
+.dayPaper {
+  padding: 0.5rem;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.dayPaper.hasShifts {
+  background-color: #f0f7ff;
+  border-left: 3px solid #2196f3;
+}
+
+.dayPaper.selectedWeek {
+  background-color: #e3f2fd;
+  border: 2px solid #1976d2;
+  border-left: 4px solid #1976d2;
+}
+
+.dayPaper.hasShifts.selectedWeek {
+  background-color: #bbdefb;
+  border-left: 4px solid #1976d2;
+}
+
+.dayPaper.emptyDay {
+  background-color: #f9f9f9;
+  cursor: default;
+}
+
+.dayNumber {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.shiftsContainer {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 80px;
+}
+
+.shift {
+  background-color: white;
+  border-radius: 3px;
+  padding: 0.35rem;
+  margin-bottom: 0.25rem;
+  border-left: 2px solid #2196f3;
+  font-size: 0.65rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.shiftUser {
+  display: block;
+  font-weight: 500;
+  color: #1976d2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shiftType {
+  display: block;
+  color: #666;
+  font-size: 0.6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.noShift {
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 1.5rem;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .dayCell {
+    min-height: 80px;
+  }
+
+  .dayPaper {
+    min-height: 80px;
+    padding: 0.4rem;
+  }
+
+  .shiftsContainer {
+    max-height: 60px;
+  }
+
+  .shift {
+    padding: 0.25rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .shiftUser {
+    font-size: 0.6rem;
+  }
+
+  .shiftType {
+    font-size: 0.55rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .dayCell {
+    min-height: 70px;
+  }
+
+  .dayPaper {
+    min-height: 70px;
+    padding: 0.3rem;
+  }
+
+  .shiftsContainer {
+    max-height: 50px;
+  }
+
+  .dayNumber {
+    font-size: 0.75rem;
+  }
+
+  .shift {
+    padding: 0.2rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .shiftUser {
+    font-size: 0.55rem;
+  }
+
+  .shiftType {
+    font-size: 0.5rem;
+  }
+}
