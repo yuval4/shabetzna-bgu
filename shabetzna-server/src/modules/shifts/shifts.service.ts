@@ -113,9 +113,6 @@ export class ShiftsService {
         data: algorithmData,
       });
 
-      // TODO delete
-      console.log({ algorithmData });
-
       await this.shiftRepository.manager.transaction(async (manager) => {
         const userShifts = allocatedShifts.data.map((shift) => {
           return manager.create(Shift, {
