@@ -69,7 +69,7 @@ export class ShiftsService {
       where: {
         missionId,
       },
-      select: ['id', 'date', 'assignedUserId', 'shiftType', 'isReadiness'],
+      select: ['id', 'date', 'assignedUserId', 'shiftType', 'isReadiness','weight'],
       order: {
         date: 'ASC',
       },
