@@ -47,6 +47,23 @@
   }
 }
 
+.table th,
+.table td {
+  padding: 5px 10px;
+}
+
+.table .MuiInputBase-root {
+  min-height: 32px;
+}
+
+.table .MuiSelect-select {
+  padding: 4px 8px;
+}
+
+.table .MuiSelect-icon {
+  right: 8px;
+}
+
 .row:last-child td,
 .row:last-child th {
   border: 0;

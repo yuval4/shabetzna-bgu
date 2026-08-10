@@ -124,6 +124,13 @@ const Shifts = () => {
     setEditShiftsModalOpen(true);
   };
 
+  const handleOpenManualCreation = () => {
+    trackEvent("shifts", "open_manual_shift_modal", {
+      existingShiftsAmount: shifts?.length,
+    });
+    setEditShiftsModalOpen(true);
+  };
+
   const handleEditShiftsModalClose = () => setEditShiftsModalOpen(false);
 
   // Update the month display when the selected week changes in month view
@@ -184,6 +191,16 @@ const Shifts = () => {
           >
             <AppRegistrationIcon />
           </IconButton>
+        )}
+
+        {hasRole(["SHIFTS_ADMIN", "TEAM_LEADER"]) && (
+          <Button
+            variant="outlined"
+            disabled={!canManageShifts}
+            onClick={handleOpenManualCreation}
+          >
+            הוספת משמרת ידנית
+          </Button>
         )}
 
         <Disable

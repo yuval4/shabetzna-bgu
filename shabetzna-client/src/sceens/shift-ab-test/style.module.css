@@ -1,0 +1,159 @@
+.container {
+  padding: 24px;
+  max-width: 1180px;
+  margin: 0 auto;
+  color: #111827;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.note {
+  margin-top: 8px;
+  color: #475569;
+}
+
+.section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.scenarioMeta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 64px;
+}
+
+.statusLine {
+  margin-top: 12px;
+  color: #475569;
+}
+
+.issueMessage {
+  margin-top: 12px;
+  color: #b91c1c;
+}
+
+.constraintPanel {
+  margin-top: 16px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.constraintPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.constraintList {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+
+@media (max-width: 960px) {
+  .container {
+    padding-bottom: 60px;
+  }
+
+  .constraintPanel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 18px rgba(15, 23, 42, 0.12);
+    z-index: 30;
+    padding: 12px;
+    transition:
+      max-height 0.3s ease,
+      padding 0.3s ease;
+    max-height: 220px;
+  }
+
+  .constraintPanel[data-open="false"] {
+    max-height: 50px;
+    padding: 8px 12px;
+  }
+
+  .constraintPanel[data-open="false"] .constraintList {
+    display: none;
+  }
+
+  .constraintList {
+    max-height: 160px;
+    margin-top: 8px;
+  }
+
+  .constraintItem {
+    padding: 5px 10px;
+  }
+}
+
+.constraintItem {
+  padding: 5px 10px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.tableWrapper {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 100%;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  text-align: left;
+}
+
+.table th {
+  background: #f8fafc;
+}
+
+.summaryCard {
+  padding: 16px;
+  border-radius: 14px;
+  background: #f8fafc;
+  min-height: 86px;
+}
